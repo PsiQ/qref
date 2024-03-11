@@ -16,7 +16,6 @@ from typing import Annotated, Any, Literal, Optional, Union
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 from pydantic.json_schema import GenerateJsonSchema
 
-
 NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
 NAMESPACED_NAME_PATTERN = rf"{NAME_PATTERN}\.{NAME_PATTERN}"
 
@@ -65,6 +64,7 @@ class OperationV1(BaseModel):
         This is NOT a top-level object in the schema. Instead, OperationV1 is wrapped in
         DocumentRootV1.
     """
+
     name: Name
     children: list[OperationV1] = Field(default_factory=list)
     type: Optional[str] = None
@@ -84,6 +84,7 @@ class OperationV1(BaseModel):
 
 class DocumentRootV1(BaseModel):
     """Root object in Operation schema V1."""
+
     version: Literal["v1"]
     operation: OperationV1
 
