@@ -22,3 +22,8 @@ jsonschema = "^4"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 100
+target-version = ['py39']
