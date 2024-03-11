@@ -100,7 +100,6 @@ class _GenerateV1JsonSchema(GenerateJsonSchema):
         return name.removeprefix("_").replace("V1", "")
 
 
-
 def generate_operation_schema_v1() -> int:
     """Generate Operation schema V1.
 
