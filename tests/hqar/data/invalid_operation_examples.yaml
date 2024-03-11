@@ -1,0 +1,246 @@
+- input:
+    operation:
+        name: root
+  description: No version provided
+  error_path: "$"
+  error_message: "'version' is a required property"
+- input:
+    version: v2
+    operation:
+        name: root
+  description: Incorrect version provided
+  error_path: "$.version"
+  error_message: "'v1' was expected"
+- input:
+    version: v1
+    operation:
+      name: "123my_operation"
+  description: "Root name starts with a number"
+  error_path: "$.operation.name"
+  error_message: "'123my_operation' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: "*op"
+  description: "Root name starts with a special char"
+  error_path: "$.operation.name"
+  error_message: "'*op' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: "op#eration"
+  description: "Root name contains special char"
+  error_path: "$.operation.name"
+  error_message: "'op#eration' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: "my operation"
+  description: "Root name contains space"
+  error_path: "$.operation.name"
+  error_message: "'my operation' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: "alias-sampling"
+  description: "Root name contains dash"
+  error_path: "$.operation.name"
+  error_message: "'alias-sampling' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: "root"
+      children:
+      - name: 123child
+  description: "Child name starts with a digit"
+  error_path: "$.operation.children[0].name"
+  error_message: "'123child' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: "root"
+      children:
+      - name: "*child"
+  description: "Child name starts with a special char"
+  error_path: "$.operation.children[0].name"
+  error_message: "'*child' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: "root"
+      children:
+      - name: "child#0"
+  description: "Child name contains special character"
+  error_path: "$.operation.children[0].name"
+  error_message: "'child#0' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: root
+      ports:
+      - name: 0in
+        direction: input
+        size: 1
+      - name: out0
+        direction: output
+        size: 1
+  description: "Root port name starts with a number"
+  error_path: "$.operation.ports[0].name"
+  error_message: "'0in' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: root
+      ports:
+      - name: in0
+        direction: input
+        size: 1
+      - name: out#0
+        direction: output
+        size: 1
+  description: "Root port name contains special char"
+  error_path: "$.operation.ports[1].name"
+  error_message: "'out#0' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: root
+      children:
+        - name: foo
+          ports:
+          - name: in0
+            direction: input
+            size: 1
+          - name: out#0
+            direction: output
+            size: 1
+  description: "Child port name contains special char"
+  error_path: "$.operation.children[0].ports[1].name"
+  error_message: "'out#0' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: root
+      ports:
+      - name: in0
+        direction: input
+        size: 1
+      - name: out0
+        direction: out
+        size: 1
+  description: "Child port direction has unexpected value"
+  error_path: "$.operation.ports[1].direction"
+  error_message: "'out' is not one of ['input', 'output', 'through']"
+- input:
+    version: v1
+    operation:
+      name: root
+      resources:
+      - name: n-qubits
+        type: "qubits"
+        value: "N"
+      ports:
+      - name: in0
+        direction: input
+        size: 1
+  description: "Resource name contains dash"
+  error_path: "$.operation.resources[0].name"
+  error_message: "'n-qubits' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: root
+      resources:
+      - name: n_qubits
+        value: "N"
+        type: "length"
+  description: "Resource has unexpected type"
+  error_path: "$.operation.resources[0].type"
+  error_message: "'length' is not one of ['additive', 'multiplicative', 'qubits', 'other']"
+- input:
+    version: v1
+    operation:
+      name: root
+      resources:
+      - name: n_qubits
+        value: "N"
+        type: "length"
+  description: "Resource has unexpected type"
+  error_path: "$.operation.resources[0].type"
+  error_message: "'length' is not one of ['additive', 'multiplicative', 'qubits', 'other']"
+- input:
+    version: v1
+    operation:
+      name: root
+      children:
+      - name: foo
+        ports:
+          - name: in_0
+            direction: input
+            size: 3
+          - name: out_0
+            direction: output
+            size: 3
+      - name: bar
+        ports:
+          - name: in_0
+            direction: input
+            size: 3
+          - name: out_0
+            direction: output
+            size: 3
+      connections:
+      - source: foo.foo.out_0
+        target: bar.in_0
+  description: "Connections have more than one namespace"
+  error_path: "$.operation.connections[0].source"
+  error_message: "'foo.foo.out_0' does not match '^(([A-Za-z_][A-Za-z0-9_]*)|([A-Za-z_][A-Za-z0-9_]*\\\\.[A-Za-z_][A-Za-z0-9_]*))$'"
+- input:
+    version: v1
+    operation:
+      name: "root"
+      input_params:
+      - "lambda"
+      - "my-input-param"
+  description: "Input param has invalid name"
+  error_path: "$.operation.input_params[1]"
+  error_message: "'my-input-param' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: ""
+  description: "Operation has an empty name"
+  error_path: "$.operation.name"
+  error_message: "'' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: "root"
+      input_params:
+      - N
+      linked_params:
+      - source: foo.N
+        targets: [foo.N]
+      children:
+      - name: foo
+        input_params:
+        - N
+  description: Source of a paramater link is namespaced
+  error_path: "$.operation.linked_params[0].source"
+  error_message: "'foo.N' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+- input:
+    version: v1
+    operation:
+      name: "root"
+      input_params:
+      - N
+      linked_params:
+      - source: N
+        targets: [N]
+      children:
+      - name: foo
+        input_params:
+        - N
+  description: "Target of a paramater link is not namespaced"
+  error_path: "$.operation.linked_params[0].targets[0]"
+  error_message: "'N' does not match '^[A-Za-z_][A-Za-z0-9_]*\\\\.[A-Za-z_][A-Za-z0-9_]*'"
