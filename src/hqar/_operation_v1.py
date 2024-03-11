@@ -100,7 +100,7 @@ class _GenerateV1JsonSchema(GenerateJsonSchema):
         return name.removeprefix("_").replace("V1", "")
 
 
-def generate_operation_schema_v1() -> int:
+def generate_operation_schema_v1() -> dict[str, Any]:
     """Generate Operation schema V1.
 
     The schema is generated from DocumentRootV1 model, and then enriched with
