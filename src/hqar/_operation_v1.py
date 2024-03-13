@@ -62,7 +62,7 @@ class OperationV1(BaseModel):
 
     Note:
         This is NOT a top-level object in the schema. Instead, OperationV1 is wrapped in
-        DocumentRootV1.
+        SchemaV1.
     """
 
     name: Name
@@ -82,7 +82,7 @@ class OperationV1(BaseModel):
         super().__init__(**{k: v for k, v in data.items() if v != [] and v != {}})
 
 
-class DocumentRootV1(BaseModel):
+class SchemaV1(BaseModel):
     """Root object in Operation schema V1."""
 
     version: Literal["v1"]
@@ -106,4 +106,4 @@ def generate_operation_schema_v1() -> dict[str, Any]:
     The schema is generated from DocumentRootV1 model, and then enriched with
     additional fields "title" and "$schema".
     """
-    return DocumentRootV1.model_json_schema(schema_generator=_GenerateV1JsonSchema)
+    return SchemaV1.model_json_schema(schema_generator=_GenerateV1JsonSchema)
