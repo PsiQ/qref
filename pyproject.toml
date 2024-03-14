@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "hqar"
+version = "0.1.0"
+description = "Hierarchical Quantum Algorithms Representation"
+authors = ["PsiQuantum"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pydantic = "^2.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
+mypy = "^1.9.0"
+flake8 = "^7.0.0"
+black = "^24.2.0"
+pyyaml = "^6"
+jsonschema = "^4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 100
+target-version = ['py39']
