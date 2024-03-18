@@ -7,7 +7,7 @@
     information is strictly prohibited without the express written permission of
     PsiQuantum Corp.
 
-Pydantic models used for defining V1 schema of Operation.
+Pydantic models used for defining V1 schema of Routine.
 """
 from __future__ import annotations
 
@@ -57,16 +57,16 @@ class _ParamLinkV1(BaseModel):
     model_config = ConfigDict(title="ParamLink")
 
 
-class OperationV1(BaseModel):
-    """Description of Operation in V1 schema.
+class RoutineV1(BaseModel):
+    """Description of Routine in V1 schema.
 
     Note:
-        This is NOT a top-level object in the schema. Instead, OperationV1 is wrapped in
+        This is NOT a top-level object in the schema. Instead, RoutineV1 is wrapped in
         SchemaV1.
     """
 
     name: Name
-    children: list[OperationV1] = Field(default_factory=list)
+    children: list[RoutineV1] = Field(default_factory=list)
     type: Optional[str] = None
     ports: list[_PortV1] = Field(default_factory=list)
     resources: list[_ResourceV1] = Field(default_factory=list)
@@ -76,23 +76,23 @@ class OperationV1(BaseModel):
     linked_params: list[_ParamLinkV1] = Field(default_factory=list)
     meta: dict[str, Any] = Field(default_factory=dict)
 
-    model_config = ConfigDict(title="Operation")
+    model_config = ConfigDict(title="Routine")
 
     def __init__(self, **data: Any):
         super().__init__(**{k: v for k, v in data.items() if v != [] and v != {}})
 
 
 class SchemaV1(BaseModel):
-    """Root object in Operation schema V1."""
+    """Root object in Program schema V1."""
 
     version: Literal["v1"]
-    operation: OperationV1
+    program: RoutineV1
 
 
 class _GenerateV1JsonSchema(GenerateJsonSchema):
     def generate(self, schema, mode="validation"):
         json_schema = super().generate(schema, mode=mode)
-        json_schema["title"] = "FTQC-ready quantum operation"
+        json_schema["title"] = "FTQC-ready quantum program"
         json_schema["$schema"] = self.schema_dialect
         return json_schema
 
@@ -100,8 +100,8 @@ class _GenerateV1JsonSchema(GenerateJsonSchema):
         return name.removeprefix("_").replace("V1", "")
 
 
-def generate_operation_schema_v1() -> dict[str, Any]:
-    """Generate Operation schema V1.
+def generate_schema_v1() -> dict[str, Any]:
+    """Generate Routine schema V1.
 
     The schema is generated from DocumentRootV1 model, and then enriched with
     additional fields "title" and "$schema".
