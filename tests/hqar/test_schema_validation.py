@@ -15,15 +15,15 @@ import pytest
 import yaml  # type: ignore[import-untyped]
 from jsonschema import ValidationError, validate
 
-from hqar import generate_operation_schema
+from hqar import generate_program_schema
 
 
 def validate_with_v1(data):
-    validate(data, generate_operation_schema(version="v1"))
+    validate(data, generate_program_schema(version="v1"))
 
 
 def load_invalid_examples():
-    with open(Path(__file__).parent / "data/invalid_operation_examples.yaml") as f:
+    with open(Path(__file__).parent / "data/invalid_program_examples.yaml") as f:
         data = yaml.safe_load(f)
 
     return [
@@ -38,7 +38,7 @@ def load_invalid_examples():
 
 
 def load_valid_examples():
-    with open(Path(__file__).parent / "data/valid_operation_examples.yaml") as f:
+    with open(Path(__file__).parent / "data/valid_program_examples.yaml") as f:
         data = yaml.safe_load(f)
 
     return [pytest.param(example["input"], id=example["description"]) for example in data]
