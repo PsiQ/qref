@@ -11,11 +11,12 @@ Test cases checking that schema matches data that we expect it to match.
 """
 from pathlib import Path
 
+import pydantic
 import pytest
 import yaml  # type: ignore[import-untyped]
 from jsonschema import ValidationError, validate
 
-from hqar import generate_program_schema
+from hqar import SchemaV1, generate_program_schema
 
 
 def validate_with_v1(data):
@@ -45,7 +46,7 @@ def load_valid_examples():
 
 
 @pytest.mark.parametrize("input, error_path, error_message", load_invalid_examples())
-def test_invalid_schema_fail_to_validate(input, error_path, error_message):
+def test_invalid_program_fails_to_validate_with_schema_v1(input, error_path, error_message):
     with pytest.raises(ValidationError) as err_info:
         validate_with_v1(input)
 
@@ -54,5 +55,16 @@ def test_invalid_schema_fail_to_validate(input, error_path, error_message):
 
 
 @pytest.mark.parametrize("input", load_valid_examples())
-def test_valid_schema_fail_to_validate(input):
+def test_valid_program_fails_to_validate_with_schema_v1(input):
     validate_with_v1(input)
+
+
+@pytest.mark.parametrize("input", [input for input, *_ in load_invalid_examples()])
+def test_invalid_program_fails_to_validate_with_pydantic_model_v1(input):
+    with pytest.raises(pydantic.ValidationError):
+        SchemaV1.model_validate(input)
+
+
+@pytest.mark.parametrize("input", load_valid_examples())
+def test_valid_program_succesfully_validate_with_pydantic_model_v1(input):
+    SchemaV1.model_validate(input)

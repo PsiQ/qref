@@ -11,9 +11,10 @@ Public API of HQAR.
 """
 from typing import Any
 
-from ._schema_v1 import generate_schema_v1
+from ._schema_v1 import SchemaV1, generate_schema_v1
 
 SCHEMA_GENERATORS = {"v1": generate_schema_v1}
+MODELS = {"v1": SchemaV1}
 LATEST_SCHEMA_VERSION = "v1"
 
 
@@ -35,4 +36,4 @@ def generate_program_schema(version: str = LATEST_SCHEMA_VERSION) -> dict[str, A
         raise ValueError(f"Unknown schema version {version}")
 
 
-__all__ = ["generate_program_schema"]
+__all__ = ["generate_program_schema", "SchemaV1"]
