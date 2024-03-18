@@ -11,20 +11,20 @@ Public API of HQAR.
 """
 from typing import Any
 
-from ._operation_v1 import generate_operation_schema_v1
+from ._schema_v1 import generate_schema_v1
 
-SCHEMA_GENERATORS = {"v1": generate_operation_schema_v1}
+SCHEMA_GENERATORS = {"v1": generate_schema_v1}
 LATEST_SCHEMA_VERSION = "v1"
 
 
-def generate_operation_schema(version: str = LATEST_SCHEMA_VERSION) -> dict[str, Any]:
-    """Generate Operation schema of given version.
+def generate_program_schema(version: str = LATEST_SCHEMA_VERSION) -> dict[str, Any]:
+    """Generate Program schema of given version.
 
     Args:
         version: version identifier of the schema.
 
     Returns:
-        A dictionary with JSON schema describing operation.
+        A dictionary with JSON schema describing program.
 
     Raises:
         ValueError: if `version` does not match any known version schema.
@@ -35,4 +35,4 @@ def generate_operation_schema(version: str = LATEST_SCHEMA_VERSION) -> dict[str,
         raise ValueError(f"Unknown schema version {version}")
 
 
-__all__ = ["generate_operation_schema"]
+__all__ = ["generate_program_schema"]
