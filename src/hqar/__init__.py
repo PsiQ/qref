@@ -9,6 +9,7 @@
 
 Public API of HQAR.
 """
+
 from typing import Any
 
 from ._schema_v1 import SchemaV1, generate_schema_v1
