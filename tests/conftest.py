@@ -7,6 +7,7 @@
     information is strictly prohibited without the express written permission of
     PsiQuantum Corp.
 """
+
 from pathlib import Path
 
 import pytest
