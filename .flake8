@@ -25,4 +25,4 @@ ignore =
 per-file-ignores =
     tests/**/test_*.py:D103,D102,D101
     __init__.py:F401
-
+copyright-check = True
