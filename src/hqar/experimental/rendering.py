@@ -101,7 +101,7 @@ def _split_ports(ports):
         elif port.direction == "output":
             output_ports.append(port)
         else:
-            raise ValueError("Bi-directional ports are note yet supported for rendering")
+            raise ValueError("Bi-directional ports are not yet supported for rendering")
     return input_ports, output_ports
 
 
