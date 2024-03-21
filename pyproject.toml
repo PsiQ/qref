@@ -21,7 +21,7 @@ jsonschema = "^4"
 
 
 [tool.poetry.scripts]
-hqar-render = "hqar.experimental.visualization:render_entry_point"
+hqar-render = "hqar.experimental.rendering:render_entry_point"
 
 
 [build-system]
