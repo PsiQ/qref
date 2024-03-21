@@ -1,0 +1,14 @@
+description: Program with ports and input params
+input:
+  program:
+    input_params:
+    - N
+    name: root
+    ports:
+    - direction: input
+      name: in_0
+      size: N
+    - direction: output
+      name: out_0
+      size: 2
+  version: v1

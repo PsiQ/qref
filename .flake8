@@ -26,3 +26,6 @@ per-file-ignores =
     tests/**/test_*.py:D103,D102,D101
     __init__.py:F401
 copyright-check = True
+copyright-regexp = Copyright\s+(©\s+)?\d{4}([-,]\d{4})*\s+%(author)s
+copyright-author = PsiQuantum Corp.
+copyright-min-file-size = 1
