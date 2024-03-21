@@ -27,9 +27,12 @@ Because of the above dichotomy, care has to be taken when constructing edges.
   "root.child.in_0"
 """
 
+from argparse import ArgumentParser
+from pathlib import Path
 from typing import Union
 
 import graphviz
+import yaml
 
 from .. import SchemaV1
 
@@ -149,3 +152,26 @@ def to_graphviz(data: Union[dict, SchemaV1]) -> graphviz.Digraph:
     dag = graphviz.Digraph(graph_attr=GRAPH_ATTRS)
     _add_routine(data.program, dag)
     return dag
+
+
+def render_entry_point():
+    parser = ArgumentParser()
+    parser.add_argument(
+        "input", help="Path to the YAML or JSON file with Routine in V1 schema", type=Path
+    )
+    parser.add_argument(
+        "output",
+        help=(
+            "Path to the output file. File format is determined based on the extension, "
+            "which should be either .svg or .pdf"
+        ),
+        type=Path,
+    )
+
+    args = parser.parse_args()
+
+    with open(args.input) as f:
+        routine = SchemaV1.model_validate(yaml.safe_load(f))
+
+    dag = to_graphviz(routine)
+    dag.render(args.output.with_suffix(""), format=args.output.suffix.strip("."))

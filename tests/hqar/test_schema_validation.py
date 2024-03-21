@@ -9,6 +9,7 @@
 
 Test cases checking that schema matches data that we expect it to match.
 """
+
 from pathlib import Path
 
 import pydantic

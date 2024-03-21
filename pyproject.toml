@@ -19,6 +19,11 @@ black = "^24.2.0"
 pyyaml = "^6"
 jsonschema = "^4"
 
+
+[tool.poetry.scripts]
+hqar-render = "hqar.experimental.visualization:render_entry_point"
+
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
