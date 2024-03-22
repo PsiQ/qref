@@ -39,7 +39,7 @@ from .. import SchemaV1
 # Dictionary of default graph attributes, used for non-leaf nodes
 GRAPH_ATTRS = {
     "rankdir": "LR",  # Draw left to right (default is top to bottom)
-    "fontname": "Helvetica",  # Some font properties
+    "fontname": "Helvetica",
 }
 
 # Keyword args passed to dag.node for drawing leaf nodes
