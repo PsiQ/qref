@@ -24,7 +24,15 @@ pip install .
 
 ## HQAR format
 
-Consider the following hierarchical dag a hypothetical quantum program:
+HQAR format represents quantum programs as a hierarchical directed acyclic graphs (DAGs).
+That's a mouthful, so let us unpack what it means:
+
+- *hierarchical*: each node can contain subgraphs, i.e. routines can be nested inside
+  larger routines.
+- *directed*: information flow is unidirectional, and the direction is unambiguous.
+- *acyclic*: meaning there are no loops.
+
+Consider the following hierarchical DAG of a hypothetical quantum program:
 
 ![program example](example_routine.svg)
 
