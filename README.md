@@ -97,3 +97,37 @@ program:
 
 For full description of HQAR format, check our [docs](https://example.com).
 
+## Using HQAR package
+
+### Using JSON schema for validating data in HQAR format
+
+JSON schema for HQAR format can be obtained by calling `generate_program_schema` function.
+Such schema can be then used for validating user's input, e.g. using `jsonschema` package:
+
+```python
+from jsonschema import validate
+from hqar import generate_program_schema
+
+# Hypothetical function loading your data as native Python dictionary.
+data = load_some_program()  
+schema = generate_program_schema()
+
+# This will raise if there are some validation errors.
+validate(schema, data)
+```
+
+### Validation using Pydantic models
+
+If you are familiar with Pydantic, you might find it easier to work with HQAR Pydantic
+models instead of interacting with JSON schema directly. In the example below, we create
+an instance of `SchemaV1` model from validated data stored in HQAR format:
+
+```python
+from hqar import SchemaV1
+
+data = load_some_program()
+
+# This will raise if data is not valid
+program = SchemaV1.model_validate(data)
+```
+
