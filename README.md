@@ -6,7 +6,7 @@ HQAR comprises:
 
 - Definition of data format, formalized as a JSON schema.
 - A Python library for validation of quantum programs written in HQAR format using [Pydantic](https://docs.pydantic.dev/).
-
+- Rudimentary visualization tool `hqar-render`.
 
 ## Installation
 
