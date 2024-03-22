@@ -10,7 +10,7 @@
 Experimental visualization capabilities for HQAR.
 
 Currently, the visualizations are done with graphviz, which does not suport
-hierarchical structures. Therefore, we have to use a somewhat tricky representation
+hierarchical structures. Therefore, we have to use a somewhat hacky representation
 of our routines:
 
 - The leaf nodes are drawn as a single graphviz node (this is not surprising) with
