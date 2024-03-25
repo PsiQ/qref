@@ -9,6 +9,7 @@
 
 Pydantic models used for defining V1 schema of Routine.
 """
+
 from __future__ import annotations
 
 from typing import Annotated, Any, Literal, Optional, Union

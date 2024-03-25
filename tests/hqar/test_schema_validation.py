@@ -9,6 +9,7 @@
 
 Test cases checking that schema matches data that we expect it to match.
 """
+
 from pathlib import Path
 
 import pydantic
@@ -38,13 +39,6 @@ def load_invalid_examples():
     ]
 
 
-def load_valid_examples():
-    with open(Path(__file__).parent / "data/valid_program_examples.yaml") as f:
-        data = yaml.safe_load(f)
-
-    return [pytest.param(example["input"], id=example["description"]) for example in data]
-
-
 @pytest.mark.parametrize("input, error_path, error_message", load_invalid_examples())
 def test_invalid_program_fails_to_validate_with_schema_v1(input, error_path, error_message):
     with pytest.raises(ValidationError) as err_info:
@@ -54,9 +48,8 @@ def test_invalid_program_fails_to_validate_with_schema_v1(input, error_path, err
     assert err_info.value.message == error_message
 
 
-@pytest.mark.parametrize("input", load_valid_examples())
-def test_valid_program_fails_to_validate_with_schema_v1(input):
-    validate_with_v1(input)
+def test_valid_program_successfully_validates_with_schema_v1(valid_program):
+    validate_with_v1(valid_program)
 
 
 @pytest.mark.parametrize("input", [input for input, *_ in load_invalid_examples()])
@@ -65,6 +58,5 @@ def test_invalid_program_fails_to_validate_with_pydantic_model_v1(input):
         SchemaV1.model_validate(input)
 
 
-@pytest.mark.parametrize("input", load_valid_examples())
-def test_valid_program_succesfully_validate_with_pydantic_model_v1(input):
-    SchemaV1.model_validate(input)
+def test_valid_program_succesfully_validate_with_pydantic_model_v1(valid_program):
+    SchemaV1.model_validate(valid_program)
