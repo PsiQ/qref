@@ -1,0 +1,5 @@
+description: Empty program
+input:
+  program:
+    name: root
+  version: v1
