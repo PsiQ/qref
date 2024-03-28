@@ -1,4 +1,12 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
-site_name: My Docs
+site_name: HQAR
+site_description: Hierarchical Quantum Algorithms Representation
+site_author: PsiQuantum Corp.
+copyright: Copyright © 2023-2024 PsiQuantum Corp.
+repo_url: https://github.com/psiq/hqar
+nav:
+  - format.md
+  - library.md
+  - development.md
 theme:
   name: material
