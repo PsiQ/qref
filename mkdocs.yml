@@ -10,3 +10,35 @@ nav:
   - development.md
 theme:
   name: material
+  features:
+    - content.code.copy
+markdown_extensions:
+  - attr_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      base_path:
+        - docs/examples
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            annotation_path: full
+            heading_level: 3
+            show_source: true
+            show_signature_annotations: true
+            members_order: source
+            separate_signature: true
+            show_if_no_docstring: true
+            show_root_heading: true
+            docstring_options:
+              ignore_init_summary: true
+              merge_init_into_class: true
+              show_docstring_returns: true
