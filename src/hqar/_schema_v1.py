@@ -1,15 +1,4 @@
-"""
-..  Copyright © 2023-2024 PsiQuantum Corp.  All rights reserved.
-    PSIQUANTUM CORP. CONFIDENTIAL
-    This file includes unpublished proprietary source code of PsiQuantum Corp.
-    The copyright notice above does not evidence any actual or intended publication
-    of such source code. Disclosure of this source code or any related proprietary
-    information is strictly prohibited without the express written permission of
-    PsiQuantum Corp.
-
-Pydantic models used for defining V1 schema of Routine.
-"""
-
+"""Pydantic models used for defining V1 schema of Routine."""
 from __future__ import annotations
 
 from typing import Annotated, Any, Literal, Optional, Union
