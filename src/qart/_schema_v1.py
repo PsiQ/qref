@@ -1,4 +1,5 @@
 """Pydantic models used for defining V1 schema of Routine."""
+
 from __future__ import annotations
 
 from typing import Annotated, Any, Literal, Optional, Union
@@ -15,6 +16,7 @@ OptionallyNamespacedName = Annotated[
     str, StringConstraints(pattern=rf"^(({NAME_PATTERN})|({NAMESPACED_NAME_PATTERN}))$")
 ]
 _Value = Union[int, float, str]
+
 
 class _PortV1(BaseModel):
     name: Name
