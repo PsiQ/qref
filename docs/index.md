@@ -12,9 +12,9 @@ quantum algorithms, optimized for usage in quantum resource estimation (QRE).
     QART's data format is built on top of JSON, which makes it easy to
     write and read.
 
-    [:octicons-arrow-right-24: Learn more](#)
+    [:octicons-arrow-right-24: Learn more](format)
 
--   :fontawesome-brands-markdown:{ .lg .middle } __Cross-language support__ 
+-   :fontawesome-brands-markdown:{ .lg .middle } __Cross-language support__
 
     ---
 
@@ -23,12 +23,12 @@ quantum algorithms, optimized for usage in quantum resource estimation (QRE).
 -   :material-language-python:{ .lg .middle } __Python library__
 
     ---
-    
+
     QART's Python package provides programmatic access
     to QART's JSON schema and ready-to-use Pydantic models.
 
-    
-    [:octicons-arrow-right-24: See user guide](#)
+
+    [:octicons-arrow-right-24: See user guide](library/userguide)
 
 -   :material-scale-balance:{ .lg .middle } __Open Source, MIT__
 
