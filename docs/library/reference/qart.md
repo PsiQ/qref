@@ -1,6 +1,3 @@
-
-# API reference
-
 ::: qart
     handler: python
     options:
