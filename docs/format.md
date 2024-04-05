@@ -77,6 +77,8 @@ So what do we have in a `program` object?
 - `children`: A list of children, or subroutines of the program.
 - `connections`: A list defining edges of our graph.
 
+### Ports
+
 Let us first take a look at ports, like the first input port of our program:
 
 ```yaml
@@ -87,12 +89,14 @@ Ports, like most other components in QART, have names, which should be distinct
 among all ports of any given program (or subroutine). Each port also has
 direction, which can be either `input` or `output`. Finally, each port has size.
 In our simple scenario, all sizes are positive integers. However, QART
-is not limited to them, and size of the port can be either:
+is not limited to them, and size of a port can be either:
 
 - A positive integer.
 - A symbol or symbolic expression (e.g. `N` or `2L + 1`)
 - A `null`, signifying that the size of the port can be deduced from sizes of
   other ports it is connected to (possibly transitively).
+
+### Children
 
 The `children` list comprises all subroutines of the program. Each entry has the
 same structure as the program itself (one could say that the schema of the `program`
@@ -100,6 +104,32 @@ is recursive). In particular, each child should have a name (unique in the scope
 of their immediate parent) and some ports. They can also have connections, and their 
 own children.
 
+### Connections
+
 The last component of any program (and most subroutines) are connections defining the
 actual graph. The `connections` field is a list of objects, each having `source`
-and `target`.
+and `target`. Both `source` and `target` can either be:
+
+- A name of the port of the program/subroutine the connection belongs to, i.e. `out_0`
+- A reference to a port of one of program/subroutine's direct children.
+  Such a reference is formatted as `child.port_name`.
+
+There are three types of connections:
+
+- Connections joining two distinct children, e.g.
+  ```yaml
+  {source: subroutine_1.out, target: merge.in_1}
+  ```
+- Connections joining a child and its parent. e.g.:
+  ```yaml
+  {source: in_0, target: subroutine_1.in}
+  ```
+  or
+  ```yaml
+  {source: merge.out, target: out}
+  ```
+- Connections joining input and output port of a parent, known as passthroughs.
+  There are no passthroughs in our simple example, but one could look like:
+  ```yaml
+  {source: in_0, target: out}
+  ```
