@@ -1,10 +1,5 @@
-# QART Python Library
 
-## User manual
-
-Describe how to use QART
-
-## API reference
+# API reference
 
 ::: qart
     handler: python
@@ -12,5 +7,3 @@ Describe how to use QART
         members:
             - generate_program_schema
             - SchemaV1
-
-
