@@ -1,4 +1,4 @@
-"""Public API of HQAR."""
+"""Public API of QART."""
 
 from typing import Any
 

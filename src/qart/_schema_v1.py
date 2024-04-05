@@ -9,14 +9,12 @@ from pydantic.json_schema import GenerateJsonSchema
 NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
 NAMESPACED_NAME_PATTERN = rf"{NAME_PATTERN}\.{NAME_PATTERN}"
 
-
 Name = Annotated[str, StringConstraints(pattern=rf"^{NAME_PATTERN}$")]
 NamespacedName = Annotated[str, StringConstraints(pattern=rf"^{NAMESPACED_NAME_PATTERN}")]
 OptionallyNamespacedName = Annotated[
     str, StringConstraints(pattern=rf"^(({NAME_PATTERN})|({NAMESPACED_NAME_PATTERN}))$")
 ]
 _Value = Union[int, float, str]
-
 
 class _PortV1(BaseModel):
     name: Name

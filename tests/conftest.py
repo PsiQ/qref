@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-VALID_PROGRAMS_ROOT_PATH = Path(__file__).parent / "hqar/data/valid_programs"
+VALID_PROGRAMS_ROOT_PATH = Path(__file__).parent / "qart/data/valid_programs"
 
 
 def _load_valid_examples():

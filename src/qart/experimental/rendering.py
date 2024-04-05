@@ -1,4 +1,4 @@
-"""Experimental visualization capabilities for HQAR.
+"""Experimental visualization capabilities for QART.
 
 Currently, the visualizations are done with graphviz, which does not suport
 hierarchical structures. Therefore, we have to use a somewhat hacky representation

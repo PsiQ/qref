@@ -6,7 +6,7 @@ Describe how to use QART
 
 ## API reference
 
-::: hqar
+::: qart
     handler: python
     options:
         members:

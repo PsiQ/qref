@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "hqar"
+name = "qart"
 version = "0.1.0"
-description = "Hierarchical Quantum Algorithms Representation"
+description = "Quantum Algorithms, Represented Topologically"
 authors = ["PsiQuantum"]
 license = "MIT"
 readme = "README.md"
@@ -22,7 +22,7 @@ jsonschema = "^4"
 
 
 [tool.poetry.scripts]
-hqar-render = "hqar.experimental.rendering:render_entry_point"
+qart-render = "qart.experimental.rendering:render_entry_point"
 
 
 [build-system]

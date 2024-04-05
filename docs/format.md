@@ -1,10 +1,10 @@
-# HQAR Format
+# QART Format
 
 ## Introduction
-HQAR format is a domain-specific language (DSL) for describing quantum algorithms
+QART format is a domain-specific language (DSL) for describing quantum algorithms
 built on top of JSON for the purpose of resource estimation.
 
-In HQAR, the algorithms are described as programs comprising hierarchical, directed
+In QART, the algorithms are described as programs comprising hierarchical, directed
 acyclic graph (henceforth hierarchical DAGs) of subroutines. Let's break down
 what this means:
 
@@ -14,7 +14,7 @@ what this means:
 - *Acyclic* means that traversing the graph along its edges (respecting their direction)
   will never lead to visiting the same node twice.
 
-Besides specifying the connectivity between routines in the algorithms, the HQAR format
+Besides specifying the connectivity between routines in the algorithms, the QART format
 also specifies how to store information relevant to resource estimation, such as
 known and unknown resources, parameters that might affect them and how the parameters
 propagate in the algorithm's graph.

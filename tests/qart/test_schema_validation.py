@@ -17,7 +17,7 @@ import pytest
 import yaml  # type: ignore[import-untyped]
 from jsonschema import ValidationError, validate
 
-from hqar import SchemaV1, generate_program_schema
+from qart import SchemaV1, generate_program_schema
 
 
 def validate_with_v1(data):
