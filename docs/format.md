@@ -1,4 +1,4 @@
-# QART Format
+# Data format
 
 ## Introduction
 QART format is a domain-specific language (DSL) for describing quantum algorithms
