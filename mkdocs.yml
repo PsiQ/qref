@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+site_name: QART
+site_description: Quantum Algorithms Represented Topologically 
+site_author: PsiQuantum Corp.
+copyright: Copyright © 2023-2024 PsiQuantum Corp.
+repo_url: https://github.com/psiq/qart
+nav:
+  - format.md
+  - Python Library:
+    - library/userguide.md
+    - API Reference:
+      - qart: library/reference/qart.md
+      - qart.experimental.rendering: library/reference/qart.experimental.rendering.md
+  - development.md
+theme:
+  name: material
+  features:
+    - content.code.copy
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      base_path:
+        - docs/examples
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+plugins:
+  - autorefs
+  - search
+  - link-marker
+  - open-in-new-tab
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            annotation_path: full
+            heading_level: 1
+            show_source: true
+            show_signature_annotations: true
+            members_order: source
+            separate_signature: true
+            show_if_no_docstring: true
+            show_root_heading: true
+            docstring_options:
+              ignore_init_summary: true
+              merge_init_into_class: true
+              show_docstring_returns: true

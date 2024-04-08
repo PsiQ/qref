@@ -1,14 +1,4 @@
-"""
-..  Copyright © 2023-2024 PsiQuantum Corp.  All rights reserved.
-    PSIQUANTUM CORP. CONFIDENTIAL
-    This file includes unpublished proprietary source code of PsiQuantum Corp.
-    The copyright notice above does not evidence any actual or intended publication
-    of such source code. Disclosure of this source code or any related proprietary
-    information is strictly prohibited without the express written permission of
-    PsiQuantum Corp.
-
-Test cases checking that schema matches data that we expect it to match.
-"""
+"""Test cases checking that schema matches data that we expect it to match."""
 
 from pathlib import Path
 
@@ -17,7 +7,7 @@ import pytest
 import yaml  # type: ignore[import-untyped]
 from jsonschema import ValidationError, validate
 
-from hqar import SchemaV1, generate_program_schema
+from qart import SchemaV1, generate_program_schema
 
 
 def validate_with_v1(data):
