@@ -72,9 +72,8 @@ Let's dissect our example. The top-level object has two mandatory properties:
 So what do we have in a `program` object?
 
 - `name`: Mandatory name of the program, here set to the string `my_program`.
-- `ports`: A collection of ports. For most of the time, not much is lost by
-  thinking of them as of quantum registers.
-- `children`: A list of children, or subroutines of the program.
+- `ports`: A collection of ports. They roughly correspond to quantum registers.
+- `children`: A list of children, or subroutines, of the program.
 - `connections`: A list defining edges of our graph.
 
 ### Ports
@@ -107,7 +106,7 @@ own children.
 ### Connections
 
 The last component of any program (and most subroutines) are connections defining the
-actual graph. The `connections` field is a list of objects, each having `source`
+edges of a graph. The `connections` field is a list of objects, each having `source`
 and `target`. Both `source` and `target` can either be:
 
 - A name of the port of the program/subroutine the connection belongs to, i.e. `out_0`
