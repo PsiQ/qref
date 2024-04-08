@@ -1,6 +1,6 @@
 version: v1
 program:
-  name: my_algorithm
+  name: my_program
   ports:
   - direction: input
     name: in_0
