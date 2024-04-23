@@ -2,7 +2,7 @@
 
 ## Setting up development environment
 
-QART uses [Poetry](https://python-poetry.org/) for managing dependencies.
+QREF uses [Poetry](https://python-poetry.org/) for managing dependencies.
 Therefore, we recommend you use Poetry to setup your environment. However,
 if you insist on not using Poetry, the more traditional way of using
 editable install with `pip` is still avaiable.
@@ -31,7 +31,16 @@ pip install -e .
 
 !!! Warning
 
-    If you are planning to add/modify dependencies of QART, we
+    If you are planning to add/modify dependencies of QREF, we
     highly recommend you use Poetry instead of pip editable install.
     Without Poetry, you will need to edit dependencies manually,
     which is very error-prone.
+
+## Setting up docs locally
+
+In order to set up docs locally you need to have appropriate dependencies – they get instaled when running `poetry install` automatically. When done, please run:
+
+```bash
+mkdocs serve
+```
+

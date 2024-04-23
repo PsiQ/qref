@@ -1,10 +1,10 @@
 # Data format
 
 ## Introduction
-QART format is a domain-specific language (DSL) for describing quantum algorithms
+QREF format is a domain-specific language (DSL) for describing quantum algorithms
 built on top of JSON for the purpose of resource estimation.
 
-In QART, the algorithms are described as programs comprising hierarchical, directed
+In QREF, the algorithms are described as programs comprising hierarchical, directed
 acyclic graph (henceforth hierarchical DAGs) of subroutines. Let's break down
 what this means:
 
@@ -14,7 +14,7 @@ what this means:
 - *Acyclic* means that traversing the graph along its edges (respecting their direction)
   will never lead to visiting the same node twice.
 
-Besides specifying the connectivity between routines in the algorithms, the QART format
+Besides specifying the connectivity between routines in the algorithms, the QREF format
 also specifies how to store information relevant to resource estimation, such as
 known and unknown resources, parameters that might affect them and how the parameters
 propagate in the algorithm's graph.
@@ -23,8 +23,8 @@ Before describing the format in detail, let us first exemplify its usage on a si
 
 ## Basic example
 
-In QART, the quantum programs are represented as graphs. If you are not used to
-representing computations as graph, don't worry! Before describing QART format,
+In QREF, the quantum programs are represented as graphs. If you are not used to
+representing computations as graph, don't worry! Before describing QREF format,
 we'll demostrate how a simple circuit can be represented as a graph.
 
 Consider a hypothetical quantum program as depicted in the following circuit.
@@ -48,8 +48,8 @@ As we can see, the graph contains both subroutines form the original circuit,
 and an artificially introduced `merge` operation used to combine outputs
 from the subprograms into one final outputs.
 
-Now that we have our graph, let's see how it can be represented in QART format.
-As already mentioned, QART format is built on top of JSON, so we can write QART
+Now that we have our graph, let's see how it can be represented in QREF format.
+As already mentioned, QREF format is built on top of JSON, so we can write QREF
 files in either JSON or YAML. For our examples, those might look as follows:
 
 === "YAML"
@@ -84,10 +84,10 @@ Let us first take a look at ports, like the first input port of our program:
 {direction: input, name: in_0, size: 1}
 ```
 
-Ports, like most other components in QART, have names, which should be distinct
+Ports, like most other components in QREF, have names, which should be distinct
 among all ports of any given program (or subroutine). Each port also has
 direction, which can be either `input` or `output`. Finally, each port has size.
-In our simple scenario, all sizes are positive integers. However, QART
+In our simple scenario, all sizes are positive integers. However, QREF
 is not limited to them, and size of a port can be either:
 
 - A positive integer.

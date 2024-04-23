@@ -1,11 +1,11 @@
-"""Common fixtures for QART tests."""
+"""Common fixtures for QREF tests."""
 
 from pathlib import Path
 
 import pytest
 import yaml
 
-VALID_PROGRAMS_ROOT_PATH = Path(__file__).parent / "qart/data/valid_programs"
+VALID_PROGRAMS_ROOT_PATH = Path(__file__).parent / "qref/data/valid_programs"
 
 
 def _load_valid_examples():

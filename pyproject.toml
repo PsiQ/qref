@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "qart"
+name = "qref"
 version = "0.1.0"
-description = "Quantum Algorithms, Represented Topologically"
+description = "Quantum Resource Estimation Format"
 authors = ["PsiQuantum"]
 license = "MIT"
 readme = "README.md"
@@ -30,7 +30,7 @@ mkdocs-open-in-new-tab = "^1.0.3"
 mkdocstrings = {version = "^0.24.2", extras = ["python"]}
 
 [tool.poetry.scripts]
-qart-render = "qart.experimental.rendering:render_entry_point"
+qref-render = "qref.experimental.rendering:render_entry_point"
 
 
 [build-system]
