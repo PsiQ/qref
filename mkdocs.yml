@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 site_name: QREF
-site_description: Quantum Resource Estimation Format
+site_description: Quantum Algorithms Represented Topologically
 site_author: PsiQuantum Corp.
 copyright: Copyright © 2023-2024 PsiQuantum Corp.
 repo_url: https://github.com/psiq/qref
@@ -14,8 +14,13 @@ nav:
   - development.md
 theme:
   name: material
+  palette:
+    primary: custom
+    accent: custom
   features:
     - content.code.copy
+extra_css:
+  - psidocs.css
 markdown_extensions:
   - admonition
   - attr_list
