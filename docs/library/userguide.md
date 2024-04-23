@@ -2,12 +2,12 @@
 
 ## Installation
 
-To install QART Python package, clone QARt repository and install it as usual with `pip`:
+To install QREF Python package, clone QREF repository and install it as usual with `pip`:
 
 ```bash
-# Clone QART repo (you can use HTTP link as well)
-git clone git@github.com:PsiQ/qart.git
-cd qart
+# Clone QREF repo (you can use HTTP link as well)
+git clone git@github.com:PsiQ/qref.git
+cd qref
 pip install .
 ```
 
@@ -17,16 +17,16 @@ installation.
 ## Usage
 
 
-### Using JSON schema for validating data in QART format
+### Using JSON schema for validating data in QREF format
 
-JSON schema for QART format can be obtained by calling
-[`generate_program_schema`][qart.generate_program_schema] function.
+JSON schema for QREF format can be obtained by calling
+[`generate_program_schema`][qref.generate_program_schema] function.
 Such schema can be then used for validating user's input, e.g. using
 [`jsonschema`](https://pypi.org/project/jsonschema/) package:
 
 ```python
 from jsonschema import validate
-from qart import generate_program_schema
+from qref import generate_program_schema
 
 # Hypothetical function loading your data as native Python dictionary.
 data = load_some_program()
@@ -39,12 +39,12 @@ validate(schema, data)
 ### Validation using Pydantic models
 
 If you are familiar with [Pydantic](https://docs.pydantic.dev/latest/), you might find
-it easier to work with QART Pydantic models instead of interacting with JSON schema directly.
-In the example below, we create an instance of [`SchemaV1`][qart.SchemaV1] model from
-validated data stored in QART format:
+it easier to work with QREF Pydantic models instead of interacting with JSON schema directly.
+In the example below, we create an instance of [`SchemaV1`][qref.SchemaV1] model from
+validated data stored in QREF format:
 
 ```python
-from qart import SchemaV1
+from qref import SchemaV1
 
 data = load_some_program()
 
@@ -52,7 +52,7 @@ data = load_some_program()
 program = SchemaV1.model_validate(data)
 ```
 
-### Rendering QART files using `qart-render` (experimental)
+### Rendering QREF files using `qref-render` (experimental)
 
 !!! Warning
 
@@ -60,19 +60,19 @@ program = SchemaV1.model_validate(data)
     incorrect results.
 
 
-QART comes with a CLI tool for rendering hierarchical graphs of quantum
+QREF comes with a CLI tool for rendering hierarchical graphs of quantum
 algorithms. To render an algorithm stored in a file named `my_program.yaml` into a 
 file `my_program_graph.svg` run:
 
 ```bash
-qart-render my_program.yaml my_program_graph.svg
+qref-render my_program.yaml my_program_graph.svg
 ```
 
-The `qart-render` tool supports `yaml` and `json` input formats, and all
+The `qref-render` tool supports `yaml` and `json` input formats, and all
 output formats supported by [graphviz](https://graphviz.org/).
 
-If, instead of using CLI, you'd like to invoke QART's rendering capabilities
-from Python script, you can look at [qart.experimental.rendering][qart.experimental.rendering]
-module which exposes experimental API for performing the same task as `qart-render`.
+If, instead of using CLI, you'd like to invoke QREF's rendering capabilities
+from Python script, you can look at [qref.experimental.rendering][qref.experimental.rendering]
+module which exposes experimental API for performing the same task as `qref-render`.
 
 

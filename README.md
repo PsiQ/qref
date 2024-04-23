@@ -1,30 +1,30 @@
-# QART
-Quantum Algorithms Represented Topologically (QART) is an open format for representing
+# QREF
+Quantum Resource Estimation Format (QREF) is an open format for representing
 quantum algorithms, optimized for usage in quantum resource estimation (QRE).
 
-QART comprises:
+QREF comprises:
 
 - Definition of data format, formalized as a JSON schema.
-- A Python library for validation of quantum programs written in QART format using [Pydantic](https://docs.pydantic.dev/).
-- Rudimentary visualization tool `qart-render`.
+- A Python library for validation of quantum programs written in QREF format using [Pydantic](https://docs.pydantic.dev/).
+- Rudimentary visualization tool `qref-render`.
 
 ## Installation
 
-Using QART data format does not require installation - you can easily write quantum
+Using QREF data format does not require installation - you can easily write quantum
 programs in YAML or JSON.
 
-To install QART Python package, clone this repository and install it as usual with `pip`:
+To install QREF Python package, clone this repository and install it as usual with `pip`:
 
 ```bash
-# Clone QART repo (you can use HTTP link as well)
-git clone git@github.com:PsiQ/qart.git
-cd qart
+# Clone QREF repo (you can use HTTP link as well)
+git clone git@github.com:PsiQ/qref.git
+cd qref
 pip install .
 ```
 
-## QART format
+## QREF format
 
-QART format represents quantum programs as a hierarchical directed acyclic graphs (DAGs).
+QREF format represents quantum programs as a hierarchical directed acyclic graphs (DAGs).
 That's a mouthful, so let us unpack what it means:
 
 - *hierarchical*: each node can contain subgraphs, i.e. routines can be nested inside
@@ -36,7 +36,7 @@ Consider the following hierarchical DAG of a hypothetical quantum program:
 
 ![program example](example_routine.svg)
 
-It can be succinctly written in QART format as:
+It can be succinctly written in QREF format as:
 
 
 ```yaml
@@ -103,18 +103,18 @@ program:
 ```
 
 
-For full description of QART format, check our [docs](https://example.com).
+For full description of QREF format, check our [docs](https://example.com).
 
-## Using QART package
+## Using QREF package
 
-### Using JSON schema for validating data in QART format
+### Using JSON schema for validating data in QREF format
 
-JSON schema for QART format can be obtained by calling `generate_program_schema` function.
+JSON schema for QREF format can be obtained by calling `generate_program_schema` function.
 Such schema can be then used for validating user's input, e.g. using `jsonschema` package:
 
 ```python
 from jsonschema import validate
-from qart import generate_program_schema
+from qref import generate_program_schema
 
 # Hypothetical function loading your data as native Python dictionary.
 data = load_some_program()
@@ -126,12 +126,12 @@ validate(schema, data)
 
 ### Validation using Pydantic models
 
-If you are familiar with Pydantic, you might find it easier to work with QART Pydantic
+If you are familiar with Pydantic, you might find it easier to work with QREF Pydantic
 models instead of interacting with JSON schema directly. In the example below, we create
-an instance of `SchemaV1` model from validated data stored in QART format:
+an instance of `SchemaV1` model from validated data stored in QREF format:
 
 ```python
-from qart import SchemaV1
+from qref import SchemaV1
 
 data = load_some_program()
 

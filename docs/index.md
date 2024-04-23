@@ -1,6 +1,6 @@
-# QART
+# QREF
 
-Quantum Algorithms Represented Topologically (QART) is an open format for representing
+Quantum Resource Estimation Format (QREF) is an open format for representing
 quantum algorithms, optimized for usage in quantum resource estimation (QRE).
 
 <div class="grid cards" markdown>
@@ -9,7 +9,7 @@ quantum algorithms, optimized for usage in quantum resource estimation (QRE).
 
     ---
 
-    QART's data format is built on top of JSON, which makes it easy to
+    QREF's data format is built on top of JSON, which makes it easy to
     write and read.
 
     [:octicons-arrow-right-24: Learn more](format)
@@ -18,14 +18,14 @@ quantum algorithms, optimized for usage in quantum resource estimation (QRE).
 
     ---
 
-    QART's JSON schema can be used for data validation in any language.
+    QREF's JSON schema can be used for data validation in any language.
 
 -   :material-language-python:{ .lg .middle } __Python library__
 
     ---
 
-    QART's Python package provides programmatic access
-    to QART's JSON schema and ready-to-use Pydantic models.
+    QREF's Python package provides programmatic access
+    to QREF's JSON schema and ready-to-use Pydantic models.
 
 
     [:octicons-arrow-right-24: See user guide](library/userguide)
@@ -34,8 +34,8 @@ quantum algorithms, optimized for usage in quantum resource estimation (QRE).
 
     ---
 
-    QART is licensed under the MIT license and lives on GitHub.
+    QREF is licensed under the MIT license and lives on GitHub.
 
-    [:octicons-arrow-right-24: See QART on GH](https://github.com/psiq/hqar)
+    [:octicons-arrow-right-24: See QREF on GH](https://github.com/psiq/hqar)
 
 </div>

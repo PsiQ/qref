@@ -1,16 +1,16 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
-site_name: QART
-site_description: Quantum Algorithms Represented Topologically 
+site_name: QREF
+site_description: Quantum Resource Estimation Format
 site_author: PsiQuantum Corp.
 copyright: Copyright © 2023-2024 PsiQuantum Corp.
-repo_url: https://github.com/psiq/qart
+repo_url: https://github.com/psiq/qref
 nav:
   - format.md
   - Python Library:
-    - library/userguide.md
-    - API Reference:
-      - qart: library/reference/qart.md
-      - qart.experimental.rendering: library/reference/qart.experimental.rendering.md
+      - library/userguide.md
+      - API Reference:
+          - qref: library/reference/qref.md
+          - qref.experimental.rendering: library/reference/qref.experimental.rendering.md
   - development.md
 theme:
   name: material
