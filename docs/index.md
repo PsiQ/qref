@@ -30,12 +30,12 @@ quantum algorithms, optimized for usage in quantum resource estimation (QRE).
 
     [:octicons-arrow-right-24: See user guide](library/userguide)
 
--   :material-scale-balance:{ .lg .middle } __Open Source, MIT__
+-   :material-scale-balance:{ .lg .middle } __Open Source, Apache 2.0__
 
     ---
 
-    QREF is licensed under the MIT license and lives on GitHub.
+    QREF is licensed under the Apache 2.0 license and lives on GitHub.
 
-    [:octicons-arrow-right-24: See QREF on GH](https://github.com/psiq/hqar)
+    [:octicons-arrow-right-24: See QREF on GH](https://github.com/psiq/qref)
 
 </div>
