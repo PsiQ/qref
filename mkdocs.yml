@@ -5,6 +5,7 @@ site_author: PsiQuantum Corp.
 copyright: Copyright © 2023-2024 PsiQuantum Corp.
 repo_url: https://github.com/psiq/qref
 nav:
+  - index.md
   - format.md
   - Python Library:
       - library/userguide.md
@@ -41,6 +42,9 @@ markdown_extensions:
       alternate_style: true
 plugins:
   - autorefs
+  - mike:
+      version_selector: true
+      canonical_version: latest
   - search
   - link-marker
   - open-in-new-tab
@@ -60,3 +64,6 @@ plugins:
               ignore_init_summary: true
               merge_init_into_class: true
               show_docstring_returns: true
+extra:
+  version:
+    provider: mike

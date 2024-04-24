@@ -12,7 +12,7 @@ quantum algorithms, optimized for usage in quantum resource estimation (QRE).
     QREF's data format is built on top of JSON, which makes it easy to
     write and read.
 
-    [:octicons-arrow-right-24: Learn more](format)
+    [:octicons-arrow-right-24: Learn more](format.md)
 
 -   :fontawesome-brands-markdown:{ .lg .middle } __Cross-language support__
 
@@ -28,7 +28,7 @@ quantum algorithms, optimized for usage in quantum resource estimation (QRE).
     to QREF's JSON schema and ready-to-use Pydantic models.
 
 
-    [:octicons-arrow-right-24: See user guide](library/userguide)
+    [:octicons-arrow-right-24: See user guide](library/userguide.md)
 
 -   :material-scale-balance:{ .lg .middle } __Open Source, Apache 2.0__
 
