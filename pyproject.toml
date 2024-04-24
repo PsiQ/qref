@@ -3,7 +3,7 @@ name = "qref"
 version = "0.1.0"
 description = "Quantum Resource Estimation Format"
 authors = ["PsiQuantum"]
-license = "MIT"
+license = "Apache 2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
