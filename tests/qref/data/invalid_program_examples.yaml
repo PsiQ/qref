@@ -1,13 +1,13 @@
 - input:
     program:
-        name: root
+      name: root
   description: No version provided
   error_path: "$"
   error_message: "'version' is a required property"
 - input:
     version: v2
     program:
-        name: root
+      name: root
   description: Incorrect version provided
   error_path: "$.version"
   error_message: "'v1' was expected"
@@ -51,7 +51,7 @@
     program:
       name: "root"
       children:
-      - name: 123child
+        - name: 123child
   description: "Child name starts with a digit"
   error_path: "$.program.children[0].name"
   error_message: "'123child' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
@@ -60,7 +60,7 @@
     program:
       name: "root"
       children:
-      - name: "*child"
+        - name: "*child"
   description: "Child name starts with a special char"
   error_path: "$.program.children[0].name"
   error_message: "'*child' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
@@ -69,7 +69,7 @@
     program:
       name: "root"
       children:
-      - name: "child#0"
+        - name: "child#0"
   description: "Child name contains special character"
   error_path: "$.program.children[0].name"
   error_message: "'child#0' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
@@ -78,12 +78,12 @@
     program:
       name: root
       ports:
-      - name: 0in
-        direction: input
-        size: 1
-      - name: out0
-        direction: output
-        size: 1
+        - name: 0in
+          direction: input
+          size: 1
+        - name: out0
+          direction: output
+          size: 1
   description: "Root port name starts with a number"
   error_path: "$.program.ports[0].name"
   error_message: "'0in' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
@@ -92,12 +92,12 @@
     program:
       name: root
       ports:
-      - name: in0
-        direction: input
-        size: 1
-      - name: out#0
-        direction: output
-        size: 1
+        - name: in0
+          direction: input
+          size: 1
+        - name: out#0
+          direction: output
+          size: 1
   description: "Root port name contains special char"
   error_path: "$.program.ports[1].name"
   error_message: "'out#0' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
@@ -108,12 +108,12 @@
       children:
         - name: foo
           ports:
-          - name: in0
-            direction: input
-            size: 1
-          - name: out#0
-            direction: output
-            size: 1
+            - name: in0
+              direction: input
+              size: 1
+            - name: out#0
+              direction: output
+              size: 1
   description: "Child port name contains special char"
   error_path: "$.program.children[0].ports[1].name"
   error_message: "'out#0' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
@@ -122,12 +122,12 @@
     program:
       name: root
       ports:
-      - name: in0
-        direction: input
-        size: 1
-      - name: out0
-        direction: out
-        size: 1
+        - name: in0
+          direction: input
+          size: 1
+        - name: out0
+          direction: out
+          size: 1
   description: "Child port direction has unexpected value"
   error_path: "$.program.ports[1].direction"
   error_message: "'out' is not one of ['input', 'output', 'through']"
@@ -136,13 +136,13 @@
     program:
       name: root
       resources:
-      - name: n-qubits
-        type: "qubits"
-        value: "N"
+        - name: n-qubits
+          type: "qubits"
+          value: "N"
       ports:
-      - name: in0
-        direction: input
-        size: 1
+        - name: in0
+          direction: input
+          size: 1
   description: "Resource name contains dash"
   error_path: "$.program.resources[0].name"
   error_message: "'n-qubits' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
@@ -151,9 +151,9 @@
     program:
       name: root
       resources:
-      - name: n_qubits
-        value: "N"
-        type: "length"
+        - name: n_qubits
+          value: "N"
+          type: "length"
   description: "Resource has unexpected type"
   error_path: "$.program.resources[0].type"
   error_message: "'length' is not one of ['additive', 'multiplicative', 'qubits', 'other']"
@@ -162,9 +162,9 @@
     program:
       name: root
       resources:
-      - name: n_qubits
-        value: "N"
-        type: "length"
+        - name: n_qubits
+          value: "N"
+          type: "length"
   description: "Resource has unexpected type"
   error_path: "$.program.resources[0].type"
   error_message: "'length' is not one of ['additive', 'multiplicative', 'qubits', 'other']"
@@ -173,25 +173,25 @@
     program:
       name: root
       children:
-      - name: foo
-        ports:
-          - name: in_0
-            direction: input
-            size: 3
-          - name: out_0
-            direction: output
-            size: 3
-      - name: bar
-        ports:
-          - name: in_0
-            direction: input
-            size: 3
-          - name: out_0
-            direction: output
-            size: 3
+        - name: foo
+          ports:
+            - name: in_0
+              direction: input
+              size: 3
+            - name: out_0
+              direction: output
+              size: 3
+        - name: bar
+          ports:
+            - name: in_0
+              direction: input
+              size: 3
+            - name: out_0
+              direction: output
+              size: 3
       connections:
-      - source: foo.foo.out_0
-        target: bar.in_0
+        - source: foo.foo.out_0
+          target: bar.in_0
   description: "Connections have more than one namespace"
   error_path: "$.program.connections[0].source"
   error_message: "'foo.foo.out_0' does not match '^(([A-Za-z_][A-Za-z0-9_]*)|([A-Za-z_][A-Za-z0-9_]*\\\\.[A-Za-z_][A-Za-z0-9_]*))$'"
@@ -200,8 +200,8 @@
     program:
       name: "root"
       input_params:
-      - "lambda"
-      - "my-input-param"
+        - "lambda"
+        - "my-input-param"
   description: "Input param has invalid name"
   error_path: "$.program.input_params[1]"
   error_message: "'my-input-param' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
@@ -217,14 +217,14 @@
     program:
       name: "root"
       input_params:
-      - N
-      linked_params:
-      - source: foo.N
-        targets: [foo.N]
-      children:
-      - name: foo
-        input_params:
         - N
+      linked_params:
+        - source: foo.N
+          targets: [foo.N]
+      children:
+        - name: foo
+          input_params:
+            - N
   description: Source of a paramater link is namespaced
   error_path: "$.program.linked_params[0].source"
   error_message: "'foo.N' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
@@ -233,14 +233,14 @@
     program:
       name: "root"
       input_params:
-      - N
-      linked_params:
-      - source: N
-        targets: [N]
-      children:
-      - name: foo
-        input_params:
         - N
+      linked_params:
+        - source: N
+          targets: [N]
+      children:
+        - name: foo
+          input_params:
+            - N
   description: "Target of a paramater link is not namespaced"
   error_path: "$.program.linked_params[0].targets[0]"
   error_message: "'N' does not match '^[A-Za-z_][A-Za-z0-9_]*\\\\.[A-Za-z_][A-Za-z0-9_]*'"
