@@ -13,7 +13,9 @@ QREF comprises:
 Using QREF data format does not require installation - you can easily write quantum
 programs in YAML or JSON.
 
-To install QREF Python package, clone this repository and install it as usual with `pip`:
+To install QREF Python package, run `pip install qref`.
+
+Alternatively, you can clone this repository and build it from source:
 
 ```bash
 # Clone QREF repo (you can use HTTP link as well)
@@ -34,7 +36,7 @@ That's a mouthful, so let us unpack what it means:
 
 Consider the following hierarchical DAG of a hypothetical quantum program:
 
-![program example](example_routine.svg)
+![program example](https://raw.githubusercontent.com/PsiQ/qref/main/example_routine.svg)
 
 It can be succinctly written in QREF format as:
 
