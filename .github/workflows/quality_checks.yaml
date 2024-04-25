@@ -46,15 +46,15 @@ jobs:
       - uses: actions/checkout@v2
       - name: Setup poetry
         uses: abatilo/actions-poetry@v2
-      - name:
+      - name: Run quality checks
         run: |
-            poetry install
-            pip install pre-commit
-            pre-commit install
-            pre-commit run -a
+          poetry install
+          pip install pre-commit
+          pre-commit install
+          pre-commit run -a
       - name: Run mypy
         run: MYPYPATH=src poetry run mypy --install-types --non-interactive src
-  
+
   test_docs_are_building:
     runs-on: ubuntu-latest
     steps:
@@ -67,6 +67,6 @@ jobs:
         uses: abatilo/actions-poetry@v2
       - name: Install package and deps
         run: |
-            poetry install --with docs
+          poetry install --with docs
       - name: Build docs
         run: poetry run mkdocs build
