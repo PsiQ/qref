@@ -105,7 +105,7 @@ program:
 ```
 
 
-For full description of QREF format, check our [docs](https://example.com).
+For full description of QREF format, check our [docs](https://psiq.github.io/qref/latest/).
 
 ## Using QREF package
 
