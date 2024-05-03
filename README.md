@@ -144,3 +144,10 @@ program = SchemaV1.model_validate(data)
 ## Development
 
 In order to install development environment or build documentation locally, please refer to [Development Guide](https://psiq.github.io/qref/latest/development/).
+
+
+## Documentation
+
+Documentation for `qref` can be found [here](https://psiq.github.io/qref/latest/).
+
+To run docs locally install it with `docs` option: `pip install ".[docs]"` (or `poetry install --with docs`) and then run `mkdocs serve`. 
