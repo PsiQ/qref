@@ -88,7 +88,7 @@ class RoutineV1(BaseModel):
     connections: Annotated[list[_ConnectionV1], connection_sorter] = Field(default_factory=list)
     input_params: list[Name] = Field(default_factory=list)
     local_variables: list[str] = Field(default_factory=list)
-    linked_params: Annotated[list[_ParamLinkV1], name_sorter] = Field(default_factory=list)
+    linked_params: Annotated[list[_ParamLinkV1], connection_sorter] = Field(default_factory=list)
     meta: dict[str, Any] = Field(default_factory=dict)
 
     model_config = ConfigDict(title="Routine")
