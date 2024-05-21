@@ -18,9 +18,8 @@ from __future__ import annotations
 
 from typing import Annotated, Any, Literal, Optional, Union
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, StringConstraints
 from pydantic.json_schema import GenerateJsonSchema
-from pydantic import AfterValidator
 
 NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
 NAMESPACED_NAME_PATTERN = rf"{NAME_PATTERN}\.{NAME_PATTERN}"
