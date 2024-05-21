@@ -49,8 +49,8 @@ jobs:
       - name: Run quality checks
         run: |
           poetry install
-          pip install pre-commit
-          pre-commit install
+          pip install pre-commit 
+          pre-commit install --hook-type commit-msg
           pre-commit run -a
       - name: Run mypy
         run: MYPYPATH=src poetry run mypy --install-types --non-interactive src
