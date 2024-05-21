@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from typing import Annotated, Any, Literal, Optional, Union
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, StringConstraints
 from pydantic.json_schema import GenerateJsonSchema
 
 NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
@@ -30,6 +30,17 @@ OptionallyNamespacedName = Annotated[
     str, StringConstraints(pattern=rf"^(({NAME_PATTERN})|({NAMESPACED_NAME_PATTERN}))$")
 ]
 _Value = Union[int, float, str]
+
+
+def sorter(key):
+    def _inner(v):
+        return sorted(v, key=key)
+
+    return _inner
+
+
+name_sorter = AfterValidator(sorter(lambda p: p.name))
+source_sorter = AfterValidator(sorter(lambda c: c.source))
 
 
 class _PortV1(BaseModel):
@@ -70,14 +81,14 @@ class RoutineV1(BaseModel):
     """
 
     name: Name
-    children: list[RoutineV1] = Field(default_factory=list)
+    children: Annotated[list[RoutineV1], name_sorter] = Field(default_factory=list)
     type: Optional[str] = None
-    ports: list[_PortV1] = Field(default_factory=list)
-    resources: list[_ResourceV1] = Field(default_factory=list)
-    connections: list[_ConnectionV1] = Field(default_factory=list)
+    ports: Annotated[list[_PortV1], name_sorter] = Field(default_factory=list)
+    resources: Annotated[list[_ResourceV1], name_sorter] = Field(default_factory=list)
+    connections: Annotated[list[_ConnectionV1], source_sorter] = Field(default_factory=list)
     input_params: list[Name] = Field(default_factory=list)
     local_variables: list[str] = Field(default_factory=list)
-    linked_params: list[_ParamLinkV1] = Field(default_factory=list)
+    linked_params: Annotated[list[_ParamLinkV1], source_sorter] = Field(default_factory=list)
     meta: dict[str, Any] = Field(default_factory=dict)
 
     model_config = ConfigDict(title="Routine")
