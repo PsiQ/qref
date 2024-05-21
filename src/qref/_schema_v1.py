@@ -40,7 +40,7 @@ def sorter(key):
 
 
 name_sorter = AfterValidator(sorter(lambda p: p.name))
-connection_sorter = AfterValidator(sorter(lambda c: c.source))
+source_sorter = AfterValidator(sorter(lambda c: c.source))
 
 
 class _PortV1(BaseModel):
@@ -85,10 +85,10 @@ class RoutineV1(BaseModel):
     type: Optional[str] = None
     ports: Annotated[list[_PortV1], name_sorter] = Field(default_factory=list)
     resources: Annotated[list[_ResourceV1], name_sorter] = Field(default_factory=list)
-    connections: Annotated[list[_ConnectionV1], connection_sorter] = Field(default_factory=list)
+    connections: Annotated[list[_ConnectionV1], source_sorter] = Field(default_factory=list)
     input_params: list[Name] = Field(default_factory=list)
     local_variables: list[str] = Field(default_factory=list)
-    linked_params: Annotated[list[_ParamLinkV1], connection_sorter] = Field(default_factory=list)
+    linked_params: Annotated[list[_ParamLinkV1], source_sorter] = Field(default_factory=list)
     meta: dict[str, Any] = Field(default_factory=dict)
 
     model_config = ConfigDict(title="Routine")
