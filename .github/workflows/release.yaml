@@ -13,7 +13,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: python
-          skip-github-releases: false
+          skip-github-release: false
           skip-github-pull-request: true
 
 # bumps z in x.y.z if the commit message is: "fix: blah blah blah" (patch)
