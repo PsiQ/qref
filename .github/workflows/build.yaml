@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      # url: https://pypi.org/p/qref 
-      url: https://test.pypi.org/p/qref
     permissions:
       id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
+      contents: write
+      pages: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -22,23 +22,29 @@ jobs:
       - name: Install pypa/build
         run: python -m pip install build --user
       - name: Setup poetry
-        uses: abatilo/actions-poetry@v2
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.8.3
+      - name: Install the packages required
+        run: poetry install --with docs
       - name: Build the package
-        # run: poetry config pypi-token.pypi ${{ secrets.TWINE_PASSWORD  }}
-        run: poetry config pypi-token.pypi ${{ secrets.TEST_TWINE_PASSWORD  }}
-
-
-
-      - name: Publish the package
-        run: poetry publish --build
-      ## Uncomment the below after IT trusted publisher pypi request has been submitted
-      # - name: Publish package distributions to PyPI
-      #   uses: pypa/gh-action-pypi-publish@release/v1
+        run: poetry build
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/ # TODO: change to https://upload.pypi.org/legacy/ after testing
+      - name: Install mike
+        run: poetry run mkdocs build
+      # https://github.com/jimporter/mike/blob/master/README.md#deploying-via-ci
+      - name: Configure git and fetch origin
+        run: |
+          git config user.name PsiQ-Qref
+          git config user.email qref-ci-bot@psiquantum.com
+          git fetch origin gh-pages --depth=1
       - name: Build docs
-        run: mike deploy $RELEASE_VERSION  latest --update-aliases
+        run: poetry run mike deploy --update-aliases $RELEASE_VERSION latest 
         env:
-          RELEASE_VERSION: ${GITHUB_REF#refs/*/} # or #{{ github.ref }}
-
+          RELEASE_VERSION: ${{ github.ref_name }}
       - name: Push docs
         run: git push origin gh-pages:gh-pages
 
