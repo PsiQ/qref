@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/PsiQ/qref/compare/v0.1.2...v0.1.3) (2024-06-03)
+
+
+### Bug Fixes
+
+* removing pull ([#80](https://github.com/PsiQ/qref/issues/80)) ([14b1dc2](https://github.com/PsiQ/qref/commit/14b1dc211de25c55ef22d6a5d6bf1903afe89cfe))
+
 ## [0.1.2](https://github.com/PsiQ/qref/compare/v0.1.1...v0.1.2) (2024-06-03)
 
 
