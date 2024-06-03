@@ -47,7 +47,7 @@ jobs:
       - name: Push docs
         run: |
           git pull -f origin gh-pages --rebase
-          git fetch origin gh-pages --depth=1
-          git push -f origin gh-pages:gh-pages
+          git fetch origin gh-pages 
+          git push origin gh-pages:gh-pages
 
 
