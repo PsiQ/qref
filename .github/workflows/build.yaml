@@ -41,10 +41,10 @@ jobs:
           git config user.name PsiQ-Qref
           git config user.email qref-ci-bot@psiquantum.com
       - name: Build docs
-        run: poetry run mike deploy $RELEASE_VERSION latest --update-aliases
+        run: poetry run mike deploy --push --update-aliases $RELEASE_VERSION latest 
         env:
           RELEASE_VERSION: ${{ github.ref_name }}
-      - name: Push docs
-        run: git push origin gh-pages:gh-pages
+      # - name: Push docs
+      #   run: git push origin gh-pages:gh-pages
 
 
