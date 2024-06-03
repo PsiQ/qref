@@ -45,9 +45,6 @@ jobs:
         env:
           RELEASE_VERSION: ${{ github.ref_name }}
       - name: Push docs
-        run: |
-          git pull -f origin gh-pages --rebase
-          git fetch origin gh-pages 
-          git push origin gh-pages:gh-pages
+        run: git push origin gh-pages:gh-pages
 
 
