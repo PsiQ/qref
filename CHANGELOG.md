@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/PsiQ/qref/compare/v0.1.3...v0.1.4) (2024-06-03)
+
+
+### Bug Fixes
+
+* update alias should fix the issues ([#82](https://github.com/PsiQ/qref/issues/82)) ([088daf8](https://github.com/PsiQ/qref/commit/088daf8d1e3b6850f9f14d5a05f83d4868ee461e))
+
 ## [0.1.3](https://github.com/PsiQ/qref/compare/v0.1.2...v0.1.3) (2024-06-03)
 
 
