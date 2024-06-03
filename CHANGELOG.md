@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/PsiQ/qref/compare/v0.1.4...v0.1.5) (2024-06-03)
+
+
+### Bug Fixes
+
+* removing gh-pages push and add it to the mike command ([#84](https://github.com/PsiQ/qref/issues/84)) ([4c86608](https://github.com/PsiQ/qref/commit/4c866088af4b75c4fe2f429dc9609db2e79e2a6d))
+
 ## [0.1.4](https://github.com/PsiQ/qref/compare/v0.1.3...v0.1.4) (2024-06-03)
 
 
