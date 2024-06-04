@@ -32,7 +32,7 @@ jobs:
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          repository-url: https://test.pypi.org/legacy/ # TODO: change to https://upload.pypi.org/legacy/ after testing
+          repository-url: https://upload.pypi.org/legacy/
       - name: Install mike
         run: poetry run mkdocs build
       # https://github.com/jimporter/mike/blob/master/README.md#deploying-via-ci
