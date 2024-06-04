@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/PsiQ/qref/compare/v0.2.0...v0.3.0) (2024-06-04)
+
+
+### Features
+
+* pointing to the production pypi ([#94](https://github.com/PsiQ/qref/issues/94)) ([4e76f8c](https://github.com/PsiQ/qref/commit/4e76f8c41456c222fc5a9499e8f6dd0ef57dbbcb))
+
 ## [0.2.0](https://github.com/PsiQ/qref/compare/v0.1.2...v0.2.0) (2024-06-03)
 
 
