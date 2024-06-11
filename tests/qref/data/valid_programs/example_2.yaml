@@ -16,9 +16,6 @@ input:
       - N
       name: bar
       ports:
-      - direction: input
-        name: in_0
-        size: N
       - direction: output
         name: out_0
         size: N

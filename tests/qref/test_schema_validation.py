@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Test cases checking that schema matches data that we expect it to match."""
-
 from pathlib import Path
 
 import pydantic
