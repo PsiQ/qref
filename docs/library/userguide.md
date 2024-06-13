@@ -53,6 +53,30 @@ program = SchemaV1.model_validate(data)
 ```
 
 
+### Topology validation
+
+There can be cases where a program is correct from the perspective of Pydantic validation, but has incorrect topology. This includes cases such as:
+
+- Disconnected ports
+- Ports with multiple connections
+- Cycles in the graph
+
+In order to validate whether the topology of the program is correct you can use `verify_topology` method. Here's a short snippet showing how one can verify their program and print out the problems (if any).
+
+```python
+from qref.verification import verify_topology
+
+program = load_some_program()
+
+verification_output = verify_topology(program)
+
+if not verification_output:
+    print("Program topology is incorrect, due to the following issues:")
+    for problem in verification_output.problems:
+        print(problem)
+
+```
+
 ### Rendering QREF files using `qref-render` (experimental)
 
 <div style="padding: 15px; border: 1px solid transparent; border-color: transparent; margin-bottom: 20px; border-radius: 4px; color: #8a6d3b;; background-color: #fcf8e3; border-color: #faebcc;">
