@@ -23,8 +23,11 @@ from ._schema_v1 import RoutineV1, SchemaV1
 class TopologyVerificationOutput:
     """Dataclass containing the output of the topology verification"""
 
-    is_valid: bool
     problems: list[str]
+
+    @property
+    def is_valid(self):
+        return len(self.problems) == 0
 
     def __bool__(self) -> bool:
         return self.is_valid
@@ -38,51 +41,43 @@ def verify_topology(routine: Union[SchemaV1, RoutineV1]) -> TopologyVerification
     """
     if isinstance(routine, SchemaV1):
         routine = routine.program
-    problems = _verify_routine_topology(routine, is_root=True)
-    if problems:
-        return TopologyVerificationOutput(False, problems)
-    else:
-        return TopologyVerificationOutput(True, problems)
+    problems = _verify_routine_topology(routine)
+    return TopologyVerificationOutput(problems)
 
 
-def _verify_routine_topology(routine: RoutineV1, is_root: bool) -> list[str]:
+def _verify_routine_topology(routine: RoutineV1) -> list[str]:
     problems = []
-    flat_graph = _get_flat_graph_from_routine(routine, path=None)
-    edge_list = []
-    for source, targets in flat_graph.items():
-        edge_list += [(source, target) for target in targets]
+    adjacency_list = _get_adjacency_list_from_routine(routine, path=None)
 
-    problems += _find_cycles(flat_graph)
-    problems += _find_disconnected_ports(routine, is_root)
+    problems += _find_cycles(adjacency_list)
+    problems += _find_disconnected_ports(routine)
 
     for child in routine.children:
-        new_problems = _verify_routine_topology(child, is_root=False)
-        if new_problems:
-            problems += new_problems
+        new_problems = _verify_routine_topology(child)
+        problems += new_problems
     return problems
 
 
-def _get_flat_graph_from_routine(routine, path) -> dict[str, list[str]]:
+def _get_adjacency_list_from_routine(routine: RoutineV1, path: str) -> dict[str, list[str]]:
+    """This function creates a flat graph representing one hierarchy level of a routine.
+
+    Nodes represent ports and edges represent connections (they're directed).
+    Additionaly, we add node for each children and edges coming from all the input ports
+    into the children, and from the children into all the output ports.
+    """
     graph = defaultdict(list)
     if path is None:
         current_path = routine.name
     else:
         current_path = ".".join([path, routine.name])
 
-    input_ports = []
-    output_ports = []
-
-    for port in routine.ports:
-        if port.direction == "input":
-            input_ports.append(".".join([current_path, port.name]))
-        elif port.direction == "output":
-            output_ports.append(".".join([current_path, port.name]))
-
+    # First, we go through all the connections and add them as adges to the graph
     for connection in routine.connections:
         source = ".".join([current_path, connection.source])
         target = ".".join([current_path, connection.target])
         graph[source].append(target)
 
+    # Then for each children we add an extra node and set of connections
     for child in routine.children:
         input_ports = []
         output_ports = []
@@ -102,41 +97,65 @@ def _get_flat_graph_from_routine(routine, path) -> dict[str, list[str]]:
     return graph
 
 
-def _find_cycles(edges) -> list[str]:
-    for node in list(edges.keys()):
-        visited: list[str] = []
-        problem = _dfs_iteration(edges, node, node, visited)
+def _find_cycles(adjacency_list: dict[str, list[str]]) -> list[str]:
+    # Note: it only returns the first detected cycle.
+    for node in list(adjacency_list.keys()):
+        problem = _dfs_iteration(adjacency_list, node)
         if problem:
             return problem
     return []
 
 
-def _dfs_iteration(edges, initial_node, node, visited):
-    if node != initial_node:
+# def _dfs_iteration(adjacency_list, initial_node, node, visited):
+#     if node != initial_node:
+#         visited.append(node)
+#     for neighbour in adjacency_list[node]:
+#         if neighbour not in visited:
+#             if neighbour == initial_node:
+#                 return [f"Cycle detected for node: {node}. Cycle: {visited}."]
+#             problem = _dfs_iteration(adjacency_list, initial_node, neighbour, visited)
+#             if problem:
+#                 return problem
+
+
+def _dfs_iteration(adjacency_list, start_node) -> list[str]:
+    to_visit = [start_node]
+    visited = []
+    predecessors = {}
+
+    while to_visit:
+        node = to_visit.pop()
         visited.append(node)
-    for neighbour in edges[node]:
-        if neighbour not in visited:
-            if neighbour == initial_node:
-                return [f"Cycle detected for node: {node}. Cycle: {visited}."]
-            problem = _dfs_iteration(edges, initial_node, neighbour, visited)
-            if problem:
-                return problem
+        for neighbour in adjacency_list[node]:
+            predecessors[neighbour] = node
+            if neighbour == start_node:
+                # Reconstruct the cycle
+                cycle = [neighbour]
+                while len(cycle) < 2 or cycle[-1] != start_node:
+                    cycle.append(predecessors[cycle[-1]])
+                return [f"Cycle detected: {cycle[::-1]}"]
+            if neighbour not in visited:
+                to_visit.append(neighbour)
+    return []
 
 
-def _find_disconnected_ports(routine: RoutineV1, is_root: bool):
+def _find_disconnected_ports(routine: RoutineV1):
     problems = []
-    conns = [c.model_dump() for c in routine.connections]
     for child in routine.children:
         for port in child.ports:
             pname = f"{routine.name}.{child.name}.{port.name}"
             if port.direction == "input":
-                matches_in = [c for c in conns if c["target"] == f"{child.name}.{port.name}"]
+                matches_in = [
+                    c for c in routine.connections if c.target == f"{child.name}.{port.name}"
+                ]
                 if len(matches_in) == 0:
                     problems.append(f"No incoming connections to {pname}.")
                 elif len(matches_in) > 1:
                     problems.append(f"Too many incoming connections to {pname}.")
             elif port.direction == "output":
-                matches_out = [c for c in conns if c["source"] == f"{child.name}.{port.name}"]
+                matches_out = [
+                    c for c in routine.connections if c.source == f"{child.name}.{port.name}"
+                ]
                 if len(matches_out) == 0:
                     problems.append(f"No outgoing connections from {pname}.")
                 elif len(matches_out) > 1:

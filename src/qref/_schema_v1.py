@@ -106,24 +106,26 @@ class RoutineV1(BaseModel):
     @field_validator("connections", mode="after")
     @classmethod
     def _validate_connections(cls, v, values) -> list[_ConnectionV1]:
-        for connection in v:
-            _validate_connection_end(connection.source, values)
-            _validate_connection_end(connection.target, values)
+        children_port_names = [
+            f"{child.name}.{port.name}"
+            for child in values.data.get("children")
+            for port in child.ports
+        ]
+        parent_port_names = [port.name for port in values.data["ports"]]
+        available_port_names = set(children_port_names + parent_port_names)
+
+        missed_ports = [
+            port
+            for connection in v
+            for port in (connection.source, connection.target)
+            if port not in available_port_names
+        ]
+        if missed_ports:
+            raise ValueError(
+                "The following ports appear in a connection but are not "
+                "among routine's port or their children's ports: {missed_ports}."
+            )
         return v
-
-
-def _validate_connection_end(port_name, values):
-    parent_port_names = [port.name for port in values.data["ports"]]
-    children_port_names = []
-    for child in values.data.get("children", []):
-        children_port_names += [".".join([child.name, port.name]) for port in child.ports]
-
-    available_port_names = parent_port_names + children_port_names
-    if port_name not in available_port_names:
-        raise ValueError(
-            f"Port name: {port_name} is present in a connection,"
-            "but is not among routine's ports or their children."
-        )
 
 
 class SchemaV1(BaseModel):

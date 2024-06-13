@@ -67,10 +67,10 @@ from qref.verification import verify_topology
 
 program = load_some_program()
 
-# This will raise if data is not valid
 verification_output = verify_topology(program)
 
-if verification_output == False:
+if not verification_output:
+    print("Program topology is incorrect, due to the following issues:")
     for problem in verification_output.problems:
         print(problem)
 

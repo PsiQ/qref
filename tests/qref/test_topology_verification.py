@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import re
 from pathlib import Path
 
 import pytest
@@ -49,4 +48,4 @@ def test_invalid_program_fails_to_validate_with_schema_v1(input, problems):
     assert not verification_output
     assert len(problems) == len(verification_output.problems)
     for expected_problem, problem in zip(problems, verification_output.problems):
-        assert re.match(expected_problem, problem)
+        assert expected_problem == problem
