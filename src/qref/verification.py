@@ -108,18 +108,6 @@ def _find_cycles(adjacency_list: dict[str, list[str]]) -> list[str]:
     return []
 
 
-# def _dfs_iteration(adjacency_list, initial_node, node, visited):
-#     if node != initial_node:
-#         visited.append(node)
-#     for neighbour in adjacency_list[node]:
-#         if neighbour not in visited:
-#             if neighbour == initial_node:
-#                 return [f"Cycle detected for node: {node}. Cycle: {visited}."]
-#             problem = _dfs_iteration(adjacency_list, initial_node, neighbour, visited)
-#             if problem:
-#                 return problem
-
-
 def _dfs_iteration(adjacency_list, start_node) -> list[str]:
     to_visit = [start_node]
     visited = []
