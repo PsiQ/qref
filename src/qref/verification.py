@@ -14,7 +14,7 @@
 
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Union
+from typing import Optional, Union
 
 from ._schema_v1 import RoutineV1, SchemaV1
 
@@ -58,7 +58,9 @@ def _verify_routine_topology(routine: RoutineV1) -> list[str]:
     return problems
 
 
-def _get_adjacency_list_from_routine(routine: RoutineV1, path: str) -> dict[str, list[str]]:
+def _get_adjacency_list_from_routine(
+    routine: RoutineV1, path: Optional[str]
+) -> dict[str, list[str]]:
     """This function creates a flat graph representing one hierarchy level of a routine.
 
     Nodes represent ports and edges represent connections (they're directed).

@@ -1,0 +1,27 @@
+- input:
+    version: v1
+    program:
+      name: root
+      children:
+        - name: foo
+          ports:
+            - name: in_0
+              direction: input
+              size: 3
+            - name: out_0
+              direction: output
+              size: 3
+        - name: bar
+          ports:
+            - name: in_0
+              direction: input
+              size: 3
+            - name: out_0
+              direction: output
+              size: 3
+      connections:
+        - source: foo.out_0
+          target: bar.in_1
+  description: "Connection contains non-existent port name"
+  error_path: "$.program.connections[0].source"
+  error_message: "'foo.foo.out_0' does not match '^(([A-Za-z_][A-Za-z0-9_]*)|([A-Za-z_][A-Za-z0-9_]*\\\\.[A-Za-z_][A-Za-z0-9_]*))$'"
