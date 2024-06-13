@@ -23,7 +23,7 @@ VALID_PROGRAMS_ROOT_PATH = Path(__file__).parent / "qref/data/valid_programs"
 
 
 def _load_valid_examples():
-    for path in VALID_PROGRAMS_ROOT_PATH.iterdir():
+    for path in sorted(VALID_PROGRAMS_ROOT_PATH.iterdir()):
         with open(path) as f:
             data = yaml.safe_load(f)
             yield pytest.param(data["input"], id=data["description"])
