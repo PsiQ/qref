@@ -40,7 +40,7 @@ validate(schema, data)
 
 If you are familiar with [Pydantic](https://docs.pydantic.dev/latest/), you might find
 it easier to work with QREF Pydantic models instead of interacting with JSON schema directly.
-In the example below, we create an instance of [`SchemaV1`][qref.SchemaV1] model from
+In the example below, we create an instance of [`SchemaV1`](qref.experimental.SchemaV1) model from
 validated data stored in QREF format:
 
 ```python
@@ -54,11 +54,10 @@ program = SchemaV1.model_validate(data)
 
 ### Rendering QREF files using `qref-render` (experimental)
 
-!!! Warning
-
-    This feature is considered experimental and may occassionally produce
-    incorrect results.
-
+<div style="padding: 15px; border: 1px solid transparent; border-color: transparent; margin-bottom: 20px; border-radius: 4px; color: #8a6d3b;; background-color: #fcf8e3; border-color: #faebcc;">
+ This feature is considered experimental and may occassionally produce
+ incorrect results.
+</div>
 
 QREF comes with a CLI tool for rendering hierarchical graphs of quantum
 algorithms. To render an algorithm stored in a file named `my_program.yaml` into a 
@@ -71,8 +70,24 @@ qref-render my_program.yaml my_program_graph.svg
 The `qref-render` tool supports `yaml` and `json` input formats, and all
 output formats supported by [graphviz](https://graphviz.org/).
 
-If, instead of using CLI, you'd like to invoke QREF's rendering capabilities
-from Python script, you can look at [qref.experimental.rendering][qref.experimental.rendering]
-module which exposes experimental API for performing the same task as `qref-render`.
+If you prefer to use QREF's rendering capabilities from a Python script instead of the CLI, you can use the [`qref.experimental.rendering`](qref.experimental.rendering) module,  which performs the same task as `qref-render`. Here, we demonstrate how to use the rendering module to visualize quantum circuits for preparing arbitrary quantum states in alias sampling. To learn more about the algorithm, please refer to the tutorial for [Bartiq](https://psiq.github.io/bartiq/latest/tutorials/02_alias_sampling_basic/).
 
+We will the `yaml` file `alias_sampling_detailed_fixed_resources.yaml`. This will the graph for the circuit:
 
+```python
+import yaml
+from qref import SchemaV1
+from qref.experimental.rendering import to_graphviz
+
+# Load the YAML file
+with open("../examples/alias_sampling_detailed_fixed_resources.yaml", "r") as f:
+    data = yaml.safe_load(f)
+
+# Validate the schema and convert to Graphviz object
+program = SchemaV1.model_validate(data)
+gv_object = to_graphviz(program)
+
+# Render the Graphviz object to a PNG file
+gv_object.render("as",format="png")
+```
+![alias_sampling|500](../images/as.png)
