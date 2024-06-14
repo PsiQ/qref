@@ -16,7 +16,8 @@
 
 from typing import Any
 
-from ._schema_v1 import SchemaV1, generate_schema_v1
+from .schema_v1 import SchemaV1, generate_schema_v1
+from .verification import verify_topology
 
 SCHEMA_GENERATORS = {"v1": generate_schema_v1}
 MODELS = {"v1": SchemaV1}
@@ -41,4 +42,4 @@ def generate_program_schema(version: str = LATEST_SCHEMA_VERSION) -> dict[str, A
         raise ValueError(f"Unknown schema version {version}")
 
 
-__all__ = ["generate_program_schema", "SchemaV1"]
+__all__ = ["generate_program_schema", "SchemaV1", "verify_topology"]

@@ -11,6 +11,7 @@ nav:
       - library/userguide.md
       - API Reference:
           - qref: library/reference/qref.md
+          - qref.schema_v1: library/reference/qref.schema_v1.md
           - qref.experimental.rendering: library/reference/qref.experimental.rendering.md
   - development.md
 theme:

@@ -16,7 +16,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Optional, Union
 
-from ._schema_v1 import RoutineV1, SchemaV1
+from .schema_v1 import RoutineV1, SchemaV1
 
 
 @dataclass
@@ -35,6 +35,8 @@ class TopologyVerificationOutput:
 
 def verify_topology(routine: Union[SchemaV1, RoutineV1]) -> TopologyVerificationOutput:
     """Checks whether program has correct topology.
+
+    Correct topology cannot include cycles or disconnected ports.
 
     Args:
         routine: Routine or program to be verified.
