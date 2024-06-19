@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Test cases checking that schema matches data that we expect it to match."""
+
 from pathlib import Path
 
 import pydantic
@@ -26,14 +28,9 @@ def validate_with_v1(data):
     validate(data, generate_program_schema(version="v1"))
 
 
-def load_invalid_examples(add_pydantic=False):
-    with open(Path(__file__).parent / "data/invalid_yaml_programs.yaml") as f:
+def load_invalid_examples():
+    with open(Path(__file__).parent / "data/invalid_program_examples.yaml") as f:
         data = yaml.safe_load(f)
-
-    if add_pydantic:
-        with open(Path(__file__).parent / "data/invalid_pydantic_programs.yaml") as f:
-            additional_data = yaml.safe_load(f)
-        data += additional_data
 
     return [
         pytest.param(
@@ -59,7 +56,7 @@ def test_valid_program_successfully_validates_with_schema_v1(valid_program):
     validate_with_v1(valid_program)
 
 
-@pytest.mark.parametrize("input", [input for input, *_ in load_invalid_examples(add_pydantic=True)])
+@pytest.mark.parametrize("input", [input for input, *_ in load_invalid_examples()])
 def test_invalid_program_fails_to_validate_with_pydantic_model_v1(input):
     with pytest.raises(pydantic.ValidationError):
         SchemaV1.model_validate(input)

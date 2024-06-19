@@ -18,14 +18,7 @@ from __future__ import annotations
 
 from typing import Annotated, Any, Literal, Optional, Union
 
-from pydantic import (
-    AfterValidator,
-    BaseModel,
-    ConfigDict,
-    Field,
-    StringConstraints,
-    field_validator,
-)
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, StringConstraints
 from pydantic.json_schema import GenerateJsonSchema
 
 NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
@@ -102,30 +95,6 @@ class RoutineV1(BaseModel):
 
     def __init__(self, **data: Any):
         super().__init__(**{k: v for k, v in data.items() if v != [] and v != {}})
-
-    @field_validator("connections", mode="after")
-    @classmethod
-    def _validate_connections(cls, v, values) -> list[_ConnectionV1]:
-        children_port_names = [
-            f"{child.name}.{port.name}"
-            for child in values.data.get("children")
-            for port in child.ports
-        ]
-        parent_port_names = [port.name for port in values.data["ports"]]
-        available_port_names = set(children_port_names + parent_port_names)
-
-        missed_ports = [
-            port
-            for connection in v
-            for port in (connection.source, connection.target)
-            if port not in available_port_names
-        ]
-        if missed_ports:
-            raise ValueError(
-                "The following ports appear in a connection but are not "
-                "among routine's port or their children's ports: {missed_ports}."
-            )
-        return v
 
 
 class SchemaV1(BaseModel):

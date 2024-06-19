@@ -244,4 +244,3 @@
   description: "Target of a paramater link is not namespaced"
   error_path: "$.program.linked_params[0].targets[0]"
   error_message: "'N' does not match '^[A-Za-z_][A-Za-z0-9_]*\\\\.[A-Za-z_][A-Za-z0-9_]*'"
-  

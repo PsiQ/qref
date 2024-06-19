@@ -52,29 +52,6 @@ data = load_some_program()
 program = SchemaV1.model_validate(data)
 ```
 
-### Topology validation
-
-There can be cases where a program is correct from the perspective of Pydantic validation, but has incorrect topology. This includes cases such as:
-
-- Disconnected ports
-- Ports with multiple connections
-- Cycles in the graph
-
-In order to validate whether the topology of the program is correct you can use `verify_topology` method. Here's a short snippet showing how one can verify their program and print out the problems (if any).
-
-```python
-from qref.verification import verify_topology
-
-program = load_some_program()
-
-verification_output = verify_topology(program)
-
-if not verification_output:
-    print("Program topology is incorrect, due to the following issues:")
-    for problem in verification_output.problems:
-        print(problem)
-
-```
 
 ### Rendering QREF files using `qref-render` (experimental)
 
@@ -94,9 +71,9 @@ qref-render my_program.yaml my_program_graph.svg
 The `qref-render` tool supports `yaml` and `json` input formats, and all
 output formats supported by [graphviz](https://graphviz.org/).
 
-If you prefer to use QREF's rendering capabilities from a Python script instead of the CLI, you can use the [`qref.experimental.rendering`](qref.experimental.rendering) module,  which performs the same task as `qref-render`. Here, we demonstrate how to use the rendering module to visualize quantum circuits for preparing arbitrary quantum states in alias sampling. To learn more about the algorithm, please refer to the tutorial for [Bartiq](https://psiq.github.io/bartiq/latest/tutorials/02_alias_sampling_basic/) – our library for symbolic resource estimation.
+If you prefer to use QREF's rendering capabilities from a Python script instead of the CLI, you can use the [`qref.experimental.rendering`](qref.experimental.rendering) module,  which performs the same task as `qref-render`. Here, we demonstrate how to use the rendering module to visualize quantum circuits for preparing arbitrary quantum states in alias sampling. To learn more about the algorithm, please refer to the tutorial for [Bartiq](https://psiq.github.io/bartiq/latest/tutorials/02_alias_sampling_basic/).
 
-We will use the `yaml` file `alias_sampling_detailed_fixed_resources.yaml` as input to generate a graph representing this algorithm:
+We will use the `yaml` file `alias_sampling_detailed_fixed_resources.yaml` as input to generate a graph of the circuit:
 
 ```python
 import yaml

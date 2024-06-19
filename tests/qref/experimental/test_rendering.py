@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Sanity checks for QREF rendering capabilities."""
+
 import json
 from subprocess import Popen
 
