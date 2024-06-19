@@ -97,7 +97,7 @@ output formats supported by [graphviz](https://graphviz.org/).
 
 If you prefer to use QREF's rendering capabilities from a Python script instead of the CLI, you can use the [`qref.experimental.rendering`](qref.experimental.rendering) module,  which performs the same task as `qref-render`. Here, we demonstrate how to use the rendering module to visualize quantum circuits for preparing arbitrary quantum states in alias sampling. To learn more about the algorithm, please refer to the tutorial for [Bartiq](https://psiq.github.io/bartiq/latest/tutorials/02_alias_sampling_basic/) – our library for symbolic resource estimation.
 
-We will use the `yaml` file `alias_sampling_detailed_fixed_resources.yaml` as input to generate a graph of the circuit:
+We will use the `yaml` file `alias_sampling_detailed_fixed_resources.yaml` as input to generate a graph representing this algorithm:
 
 ```python
 import yaml
