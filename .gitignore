@@ -152,7 +152,9 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+## ignore .DS Store file.
 **/.DS_Store
+*.DS Store
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
