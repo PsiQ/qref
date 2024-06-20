@@ -154,7 +154,7 @@ cython_debug/
 
 ## ignore .DS Store file.
 **/.DS_Store
-*.DS_Store
+*.DS Store
 
 
 # PyCharm

@@ -86,12 +86,12 @@ def _format_node_name(node_name, parent):
     if child.children:  # Case 2: port of non-leaf child (=> port is a graphviz node)
         return node_name
     else:  # Case 3: port of leaf child (=> port is an actual port of Mrecord, use ":")
-        return f"{child_name}:{port_name}"
+        return f"{child_name}: {port_name}"
 
 
 def _add_nonleaf_ports(ports, parent_cluster, parent_path: str, group_name):
     with parent_cluster.subgraph(
-        name=f"{parent_path}:{group_name}", graph_attr=PORT_GROUP_ATTRS
+        name=f"{parent_path}: {group_name}", graph_attr=PORT_GROUP_ATTRS
     ) as subgraph:
         for port in ports:
             subgraph.node(name=f"{parent_path}.{port.name}", label=port.name, **PORT_NODE_KWARGS)
@@ -136,7 +136,7 @@ def _ports_row(ports) -> str:
 
 def _add_leaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
     input_ports, output_ports = _split_ports(routine.ports)
-    label = f"{{ {_ports_row(input_ports)} | {routine.name } | {_ports_row(output_ports)} }}"
+    label = f"{{{_ports_row(input_ports)}|{routine.name}|{_ports_row(output_ports)}}}"
     dag.node(".".join((parent_path, routine.name)), label=label, **LEAF_NODE_KWARGS)
 
 
