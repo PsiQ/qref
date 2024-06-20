@@ -131,6 +131,7 @@ from qref.experimental.rendering import to_graphviz
 
 # Load the YAML file
 with open("../examples/alias_sampling_detailed_fixed_resources.yaml", "r") as f:
+with open("../examples/alias_sampling.yaml", "r") as f:
     data = yaml.safe_load(f)
 
 # Validate the schema and convert to Graphviz object
@@ -139,5 +140,6 @@ gv_object = to_graphviz(program)
 
 # Render the Graphviz object to a PNG file
 gv_object.render("as",format="png")
+gv_object.render("alias_sampling", format="png")
 ```
 ![alias_sampling|500](../images/as.png)
