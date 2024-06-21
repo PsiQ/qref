@@ -101,10 +101,9 @@ if not verification_output:
 
 ### Rendering QREF files using `qref-render` (experimental)
 
-<div style="padding: 15px; border: 1px solid transparent; border-color: transparent; margin-bottom: 20px; border-radius: 4px; color: #8a6d3b;; background-color: #fcf8e3; border-color: #faebcc;">
+!!!warning
  This feature is considered experimental and may occassionally produce
  incorrect results.
-</div>
 
 QREF comes with a CLI tool for rendering hierarchical graphs of quantum
 algorithms. To render an algorithm stored in a file named `my_program.yaml` into a 
