@@ -101,7 +101,7 @@ if not verification_output:
 
 ### Rendering QREF files using `qref-render` (experimental)
 
-!!!warning
+!!! Warning
  This feature is considered experimental and may occassionally produce
  incorrect results.
 
