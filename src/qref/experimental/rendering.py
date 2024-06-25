@@ -90,9 +90,7 @@ def _format_node_name(node_name, parent):
 
 
 def _add_nonleaf_ports(ports, parent_cluster, parent_path: str, group_name):
-    with parent_cluster.subgraph(
-        name=f"{parent_path}: {group_name}", graph_attr=PORT_GROUP_ATTRS
-    ) as subgraph:
+    with parent_cluster.subgraph(name=f"{parent_path}: {group_name}", graph_attr=PORT_GROUP_ATTRS) as subgraph:
         for port in ports:
             subgraph.node(name=f"{parent_path}.{port.name}", label=port.name, **PORT_NODE_KWARGS)
 
@@ -114,9 +112,7 @@ def _add_nonleaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
     input_ports, output_ports = _split_ports(routine.ports)
     full_path = f"{parent_path}.{routine.name}"
 
-    with dag.subgraph(
-        name=f"cluster_{full_path}", graph_attr={"label": routine.name, **CLUSTER_KWARGS}
-    ) as cluster:
+    with dag.subgraph(name=f"cluster_{full_path}", graph_attr={"label": routine.name, **CLUSTER_KWARGS}) as cluster:
         _add_nonleaf_ports(input_ports, cluster, full_path, "inputs")
         _add_nonleaf_ports(output_ports, cluster, full_path, "outputs")
 
@@ -161,9 +157,7 @@ def to_graphviz(data: Union[dict, SchemaV1]) -> graphviz.Digraph:
 
 def render_entry_point():
     parser = ArgumentParser()
-    parser.add_argument(
-        "input", help="Path to the YAML or JSON file with Routine in V1 schema", type=Path
-    )
+    parser.add_argument("input", help="Path to the YAML or JSON file with Routine in V1 schema", type=Path)
     parser.add_argument(
         "output",
         help=(

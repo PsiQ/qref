@@ -29,52 +29,64 @@ from pydantic import (
 from pydantic.json_schema import GenerateJsonSchema
 
 NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
-NAMESPACED_NAME_PATTERN = rf"{NAME_PATTERN}\.{NAME_PATTERN}"
+OPTIONALLY_NAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)?{NAME_PATTERN}$"
+MULTINAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)+{NAME_PATTERN}$"
+OPTIONALLY_MULTINAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)*{NAME_PATTERN}$"
 
-Name = Annotated[str, StringConstraints(pattern=rf"^{NAME_PATTERN}$")]
-NamespacedName = Annotated[str, StringConstraints(pattern=rf"^{NAMESPACED_NAME_PATTERN}")]
-OptionallyNamespacedName = Annotated[
-    str, StringConstraints(pattern=rf"^(({NAME_PATTERN})|({NAMESPACED_NAME_PATTERN}))$")
+_Name = Annotated[str, StringConstraints(pattern=rf"^{NAME_PATTERN}$")]
+_OptionallyNamespacedName = Annotated[str, StringConstraints(pattern=rf"{OPTIONALLY_NAMESPACED_NAME_PATTERN}")]
+_MultiNamespacedName = Annotated[str, StringConstraints(pattern=rf"{MULTINAMESPACED_NAME_PATTERN}")]
+_OptionallyMultiNamespacedName = Annotated[
+    str, StringConstraints(pattern=rf"{OPTIONALLY_MULTINAMESPACED_NAME_PATTERN}")
 ]
+
 _Value = Union[int, float, str]
 
 
-def sorter(key):
+def _sorter(key):
     def _inner(v):
         return sorted(v, key=key)
 
     return _inner
 
 
-name_sorter = AfterValidator(sorter(lambda p: p.name))
-source_sorter = AfterValidator(sorter(lambda c: c.source))
+_name_sorter = AfterValidator(_sorter(lambda p: p.name))
+_source_sorter = AfterValidator(_sorter(lambda c: c.source))
 
 
-class _PortV1(BaseModel):
-    name: Name
+class PortV1(BaseModel):
+    """Description of Port in V1 schema"""
+
+    name: _Name
     direction: Literal["input", "output", "through"]
     size: Optional[_Value]
     model_config = ConfigDict(title="Port")
 
 
-class _ConnectionV1(BaseModel):
-    source: OptionallyNamespacedName
-    target: OptionallyNamespacedName
+class ConnectionV1(BaseModel):
+    """Description of Connection in V1 schema"""
+
+    source: _OptionallyNamespacedName
+    target: _OptionallyNamespacedName
 
     model_config = ConfigDict(title="Connection", use_enum_values=True)
 
 
-class _ResourceV1(BaseModel):
-    name: Name
+class ResourceV1(BaseModel):
+    """Description of Resource in V1 schema"""
+
+    name: _Name
     type: Literal["additive", "multiplicative", "qubits", "other"]
     value: Union[int, float, str, None]
 
     model_config = ConfigDict(title="Resource")
 
 
-class _ParamLinkV1(BaseModel):
-    source: Name
-    targets: list[NamespacedName]
+class ParamLinkV1(BaseModel):
+    """Description of Parameter link in V1 schema"""
+
+    source: _OptionallyNamespacedName
+    targets: list[_MultiNamespacedName]
 
     model_config = ConfigDict(title="ParamLink")
 
@@ -87,15 +99,15 @@ class RoutineV1(BaseModel):
         SchemaV1.
     """
 
-    name: Name
-    children: Annotated[list[RoutineV1], name_sorter] = Field(default_factory=list)
+    name: _Name
+    children: Annotated[list[RoutineV1], _name_sorter] = Field(default_factory=list)
     type: Optional[str] = None
-    ports: Annotated[list[_PortV1], name_sorter] = Field(default_factory=list)
-    resources: Annotated[list[_ResourceV1], name_sorter] = Field(default_factory=list)
-    connections: Annotated[list[_ConnectionV1], source_sorter] = Field(default_factory=list)
-    input_params: list[Name] = Field(default_factory=list)
+    ports: Annotated[list[PortV1], _name_sorter] = Field(default_factory=list)
+    resources: Annotated[list[ResourceV1], _name_sorter] = Field(default_factory=list)
+    connections: Annotated[list[ConnectionV1], _source_sorter] = Field(default_factory=list)
+    input_params: list[_OptionallyMultiNamespacedName] = Field(default_factory=list)
     local_variables: list[str] = Field(default_factory=list)
-    linked_params: Annotated[list[_ParamLinkV1], source_sorter] = Field(default_factory=list)
+    linked_params: Annotated[list[ParamLinkV1], _source_sorter] = Field(default_factory=list)
     meta: dict[str, Any] = Field(default_factory=dict)
 
     model_config = ConfigDict(title="Routine")
@@ -105,11 +117,9 @@ class RoutineV1(BaseModel):
 
     @field_validator("connections", mode="after")
     @classmethod
-    def _validate_connections(cls, v, values) -> list[_ConnectionV1]:
+    def _validate_connections(cls, v, values) -> list[ConnectionV1]:
         children_port_names = [
-            f"{child.name}.{port.name}"
-            for child in values.data.get("children")
-            for port in child.ports
+            f"{child.name}.{port.name}" for child in values.data.get("children") for port in child.ports
         ]
         parent_port_names = [port.name for port in values.data["ports"]]
         available_port_names = set(children_port_names + parent_port_names)
