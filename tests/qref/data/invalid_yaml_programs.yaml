@@ -194,7 +194,7 @@
           target: bar.in_0
   description: "Connections have more than one namespace"
   error_path: "$.program.connections[0].source"
-  error_message: "'foo.foo.out_0' does not match '^(([A-Za-z_][A-Za-z0-9_]*)|([A-Za-z_][A-Za-z0-9_]*\\\\.[A-Za-z_][A-Za-z0-9_]*))$'"
+  error_message: "'foo.foo.out_0' does not match '^([A-Za-z_][A-Za-z0-9_]*\\\\.)?[A-Za-z_][A-Za-z0-9_]*$'"
 - input:
     version: v1
     program:
@@ -204,7 +204,7 @@
         - "my-input-param"
   description: "Input param has invalid name"
   error_path: "$.program.input_params[1]"
-  error_message: "'my-input-param' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
+  error_message: "'my-input-param' does not match '^([A-Za-z_][A-Za-z0-9_]*\\\\.)*[A-Za-z_][A-Za-z0-9_]*$'"
 - input:
     version: v1
     program:
@@ -212,22 +212,6 @@
   description: "Program has an empty name"
   error_path: "$.program.name"
   error_message: "'' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
-- input:
-    version: v1
-    program:
-      name: "root"
-      input_params:
-        - N
-      linked_params:
-        - source: foo.N
-          targets: [foo.N]
-      children:
-        - name: foo
-          input_params:
-            - N
-  description: Source of a paramater link is namespaced
-  error_path: "$.program.linked_params[0].source"
-  error_message: "'foo.N' does not match '^[A-Za-z_][A-Za-z0-9_]*$'"
 - input:
     version: v1
     program:
@@ -243,5 +227,5 @@
             - N
   description: "Target of a paramater link is not namespaced"
   error_path: "$.program.linked_params[0].targets[0]"
-  error_message: "'N' does not match '^[A-Za-z_][A-Za-z0-9_]*\\\\.[A-Za-z_][A-Za-z0-9_]*'"
+  error_message: "'N' does not match '^([A-Za-z_][A-Za-z0-9_]*\\\\.)+[A-Za-z_][A-Za-z0-9_]*$'"
   

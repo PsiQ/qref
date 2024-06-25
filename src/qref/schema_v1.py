@@ -29,13 +29,19 @@ from pydantic import (
 from pydantic.json_schema import GenerateJsonSchema
 
 NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
-NAMESPACED_NAME_PATTERN = rf"{NAME_PATTERN}\.{NAME_PATTERN}"
+OPTIONALLY_NAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)?{NAME_PATTERN}$"
+MULTINAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)+{NAME_PATTERN}$"
+OPTIONALLY_MULTINAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)*{NAME_PATTERN}$"
 
 _Name = Annotated[str, StringConstraints(pattern=rf"^{NAME_PATTERN}$")]
-_NamespacedName = Annotated[str, StringConstraints(pattern=rf"^{NAMESPACED_NAME_PATTERN}")]
 _OptionallyNamespacedName = Annotated[
-    str, StringConstraints(pattern=rf"^(({NAME_PATTERN})|({NAMESPACED_NAME_PATTERN}))$")
+    str, StringConstraints(pattern=rf"{OPTIONALLY_NAMESPACED_NAME_PATTERN}")
 ]
+_MultiNamespacedName = Annotated[str, StringConstraints(pattern=rf"{MULTINAMESPACED_NAME_PATTERN}")]
+_OptionallyMultiNamespacedName = Annotated[
+    str, StringConstraints(pattern=rf"{OPTIONALLY_MULTINAMESPACED_NAME_PATTERN}")
+]
+
 _Value = Union[int, float, str]
 
 
@@ -81,8 +87,8 @@ class ResourceV1(BaseModel):
 class ParamLinkV1(BaseModel):
     """Description of Parameter link in V1 schema"""
 
-    source: _Name
-    targets: list[_NamespacedName]
+    source: _OptionallyNamespacedName
+    targets: list[_MultiNamespacedName]
 
     model_config = ConfigDict(title="ParamLink")
 
@@ -101,7 +107,7 @@ class RoutineV1(BaseModel):
     ports: Annotated[list[PortV1], _name_sorter] = Field(default_factory=list)
     resources: Annotated[list[ResourceV1], _name_sorter] = Field(default_factory=list)
     connections: Annotated[list[ConnectionV1], _source_sorter] = Field(default_factory=list)
-    input_params: list[_Name] = Field(default_factory=list)
+    input_params: list[_OptionallyMultiNamespacedName] = Field(default_factory=list)
     local_variables: list[str] = Field(default_factory=list)
     linked_params: Annotated[list[ParamLinkV1], _source_sorter] = Field(default_factory=list)
     meta: dict[str, Any] = Field(default_factory=dict)
