@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://github.com/PsiQ/qref/compare/v0.4.0...v0.5.0) (2024-06-25)
+
+
+### Features
+
+* changes visibility of classes and methods in schemav1 ([#99](https://github.com/PsiQ/qref/issues/99)) ([2f2c4eb](https://github.com/PsiQ/qref/commit/2f2c4eb032e4d5385804e6e5cbefef631906997c))
+
+
+### Documentation
+
+* Add Example for Using Rendering Module in Documentation ([#103](https://github.com/PsiQ/qref/issues/103)) ([966f67a](https://github.com/PsiQ/qref/commit/966f67a05b240e9412f784c1fd580fb706536341))
+
 ## [0.4.0](https://github.com/PsiQ/qref/compare/v0.3.0...v0.4.0) (2024-06-13)
 
 
