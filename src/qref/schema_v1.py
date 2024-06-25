@@ -34,9 +34,7 @@ MULTINAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)+{NAME_PATTERN}$"
 OPTIONALLY_MULTINAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)*{NAME_PATTERN}$"
 
 _Name = Annotated[str, StringConstraints(pattern=rf"^{NAME_PATTERN}$")]
-_OptionallyNamespacedName = Annotated[
-    str, StringConstraints(pattern=rf"{OPTIONALLY_NAMESPACED_NAME_PATTERN}")
-]
+_OptionallyNamespacedName = Annotated[str, StringConstraints(pattern=rf"{OPTIONALLY_NAMESPACED_NAME_PATTERN}")]
 _MultiNamespacedName = Annotated[str, StringConstraints(pattern=rf"{MULTINAMESPACED_NAME_PATTERN}")]
 _OptionallyMultiNamespacedName = Annotated[
     str, StringConstraints(pattern=rf"{OPTIONALLY_MULTINAMESPACED_NAME_PATTERN}")
@@ -121,9 +119,7 @@ class RoutineV1(BaseModel):
     @classmethod
     def _validate_connections(cls, v, values) -> list[ConnectionV1]:
         children_port_names = [
-            f"{child.name}.{port.name}"
-            for child in values.data.get("children")
-            for port in child.ports
+            f"{child.name}.{port.name}" for child in values.data.get("children") for port in child.ports
         ]
         parent_port_names = [port.name for port in values.data["ports"]]
         available_port_names = set(children_port_names + parent_port_names)

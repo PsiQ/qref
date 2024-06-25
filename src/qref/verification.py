@@ -60,9 +60,7 @@ def _verify_routine_topology(routine: RoutineV1) -> list[str]:
     return problems
 
 
-def _get_adjacency_list_from_routine(
-    routine: RoutineV1, path: Optional[str]
-) -> dict[str, list[str]]:
+def _get_adjacency_list_from_routine(routine: RoutineV1, path: Optional[str]) -> dict[str, list[str]]:
     """This function creates a flat graph representing one hierarchy level of a routine.
 
     Nodes represent ports and edges represent connections (they're directed).
@@ -137,17 +135,13 @@ def _find_disconnected_ports(routine: RoutineV1):
         for port in child.ports:
             pname = f"{routine.name}.{child.name}.{port.name}"
             if port.direction == "input":
-                matches_in = [
-                    c for c in routine.connections if c.target == f"{child.name}.{port.name}"
-                ]
+                matches_in = [c for c in routine.connections if c.target == f"{child.name}.{port.name}"]
                 if len(matches_in) == 0:
                     problems.append(f"No incoming connections to {pname}.")
                 elif len(matches_in) > 1:
                     problems.append(f"Too many incoming connections to {pname}.")
             elif port.direction == "output":
-                matches_out = [
-                    c for c in routine.connections if c.source == f"{child.name}.{port.name}"
-                ]
+                matches_out = [c for c in routine.connections if c.source == f"{child.name}.{port.name}"]
                 if len(matches_out) == 0:
                     problems.append(f"No outgoing connections from {pname}.")
                 elif len(matches_out) > 1:
