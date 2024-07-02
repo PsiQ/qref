@@ -62,7 +62,7 @@ a dictionary with unique keys. Debugging problems that could arise
 in this way would be a nightmare, and we want to save all of us
 such hurdles.
 
-Now, what happens we use lists? Let's try the following code:
+Now, what happens if we use lists? Let's try the following code:
 
 ```python
 import yaml
@@ -116,7 +116,7 @@ children:
 ```
 
 There are essentially two reasons, but both of them
-have to do with the fact, that we wanted our structure
+have to do with the fact that we wanted our structure
 to be recursive.
 
 To quickly explain what recursive in this context means,
@@ -136,7 +136,7 @@ following consequences, listed in the order of importance:
 
 - The JSON schema would no longer be recursive, and thus
   would contain more definitions, which simply means
-  it would be more complex and harder do read.
+  it would be more complex and harder to read.
 - The hierarchy of our Pydantic models would get slightly
   more complex.
 
