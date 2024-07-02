@@ -14,6 +14,7 @@ nav:
           - qref.schema_v1: library/reference/qref.schema_v1.md
           - qref.experimental.rendering: library/reference/qref.experimental.rendering.md
   - development.md
+  - design.md
 theme:
   name: material
   palette:
