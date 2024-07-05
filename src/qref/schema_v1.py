@@ -106,7 +106,7 @@ class RoutineV1(BaseModel):
     resources: Annotated[list[ResourceV1], _name_sorter] = Field(default_factory=list)
     connections: Annotated[list[ConnectionV1], _source_sorter] = Field(default_factory=list)
     input_params: list[_OptionallyMultiNamespacedName] = Field(default_factory=list)
-    local_variables: list[str] = Field(default_factory=list)
+    local_variables: dict[str, str] = Field(default_factory=dict)
     linked_params: Annotated[list[ParamLinkV1], _source_sorter] = Field(default_factory=list)
     meta: dict[str, Any] = Field(default_factory=dict)
 
