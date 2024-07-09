@@ -3,7 +3,7 @@ program:
   - input_params:
     - L
     local_variables:
-    - R=ceiling(log_2(L))
+      R: ceiling(log_2(L))
     name: usp
     ports:
     - direction: input
@@ -33,7 +33,7 @@ program:
     - L
     - mu
     local_variables:
-    - R=ceiling(log_2(L))
+      R: ceiling(log_2(L))
     name: qrom
     ports:
     - direction: input
@@ -168,7 +168,7 @@ program:
     - qrom.mu
     - compare.mu
   local_variables:
-  - R=ceiling(log_2(L))
+    R: ceiling(log_2(L))
   name: alias_sampling
   ports:
   - direction: input
