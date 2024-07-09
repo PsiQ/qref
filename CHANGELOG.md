@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.6.0](https://github.com/PsiQ/qref/compare/v0.5.0...v0.6.0) (2024-07-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* Convert local_variables from list of strings to dictionary ([#106](https://github.com/PsiQ/qref/issues/106))
+
+### Miscellaneous Chores
+
+* release 0.6.0 ([efdaa4c](https://github.com/PsiQ/qref/commit/efdaa4c1b69baa32ce6875e089b8ac895ab2519e))
+
+
+### Code Refactoring
+
+* Convert local_variables from list of strings to dictionary ([#106](https://github.com/PsiQ/qref/issues/106)) ([62697e0](https://github.com/PsiQ/qref/commit/62697e071500916b7dd920136cf63e196434a46d))
+
 ## [0.5.0](https://github.com/PsiQ/qref/compare/v0.4.0...v0.5.0) (2024-06-25)
 
 
