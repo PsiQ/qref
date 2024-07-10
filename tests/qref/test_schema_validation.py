@@ -11,12 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from pathlib import Path
-
 import pydantic
 import pytest
-import yaml  # type: ignore[import-untyped]
 from jsonschema import ValidationError, validate
 
 from qref import SchemaV1, generate_program_schema
