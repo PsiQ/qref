@@ -26,27 +26,7 @@ def validate_with_v1(data):
     validate(data, generate_program_schema(version="v1"))
 
 
-def load_invalid_examples(add_pydantic=False):
-    with open(Path(__file__).parent / "data/invalid_yaml_programs.yaml") as f:
-        data = yaml.safe_load(f)
-
-    if add_pydantic:
-        with open(Path(__file__).parent / "data/invalid_pydantic_programs.yaml") as f:
-            additional_data = yaml.safe_load(f)
-        data += additional_data
-
-    return [
-        pytest.param(
-            example["input"],
-            example["error_path"],
-            example["error_message"],
-            id=example["description"],
-        )
-        for example in data
-    ]
-
-
-@pytest.mark.parametrize("input, error_path, error_message", load_invalid_examples())
+@pytest.mark.invalid_schema_examples
 def test_invalid_program_fails_to_validate_with_schema_v1(input, error_path, error_message):
     with pytest.raises(ValidationError) as err_info:
         validate_with_v1(input)
@@ -59,10 +39,11 @@ def test_valid_program_successfully_validates_with_schema_v1(valid_program):
     validate_with_v1(valid_program)
 
 
-@pytest.mark.parametrize("input", [input for input, *_ in load_invalid_examples(add_pydantic=True)])
+@pytest.mark.invalid_pydantic_examples
 def test_invalid_program_fails_to_validate_with_pydantic_model_v1(input):
-    with pytest.raises(pydantic.ValidationError):
+    with pytest.raises(pydantic.ValidationError) as e:
         SchemaV1.model_validate(input)
+    print(e.value)
 
 
 def test_valid_program_succesfully_validate_with_pydantic_model_v1(valid_program):
