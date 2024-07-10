@@ -57,14 +57,11 @@ def pytest_generate_tests(metafunc):
                     id=example["description"],
                 )
                 for example in data
-            ]
+            ],
         )
     elif "invalid_pydantic_examples" in marker_names:
         data = [
             example["input"]
-            for example in (
-                _load_yaml(INVALID_YAML_PROGRAMS_PATH) +
-                _load_yaml(INVALID_PYDANTIC_PROGRAMS_PATH)
-            )
+            for example in (_load_yaml(INVALID_YAML_PROGRAMS_PATH) + _load_yaml(INVALID_PYDANTIC_PROGRAMS_PATH))
         ]
         metafunc.parametrize("input", data)
