@@ -27,6 +27,7 @@ from pydantic import (
     model_validator,
 )
 from pydantic.json_schema import GenerateJsonSchema
+from typing_extensions import Self
 
 NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
 OPTIONALLY_NAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)?{NAME_PATTERN}$"
@@ -116,15 +117,14 @@ class RoutineV1(BaseModel):
         super().__init__(**{k: v for k, v in data.items() if v != [] and v != {}})
 
     @model_validator(mode="after")
-    @classmethod
-    def _validate_connections(cls, routine) -> list[ConnectionV1]:
-        children_port_names = [f"{child.name}.{port.name}" for child in routine.children for port in child.ports]
-        parent_port_names = [port.name for port in routine.ports]
+    def _validate_connections(self) -> Self:
+        children_port_names = [f"{child.name}.{port.name}" for child in self.children for port in child.ports]
+        parent_port_names = [port.name for port in self.ports]
         available_port_names = set(children_port_names + parent_port_names)
 
         missed_ports = [
             port
-            for connection in routine.connections
+            for connection in self.connections
             for port in (connection.source, connection.target)
             if port not in available_port_names
         ]
@@ -133,7 +133,7 @@ class RoutineV1(BaseModel):
                 "The following ports appear in a connection but are not "
                 "among routine's port or their children's ports: {missed_ports}."
             )
-        return routine
+        return self
 
 
 class SchemaV1(BaseModel):
