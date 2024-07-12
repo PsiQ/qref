@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2](https://github.com/PsiQ/qref/compare/v0.6.1...v0.6.2) (2024-07-12)
+
+
+### Bug Fixes
+
+* Fix incorrect rendering with graphviz ([#110](https://github.com/PsiQ/qref/issues/110)) ([cc4503f](https://github.com/PsiQ/qref/commit/cc4503fa9aeb51609ee2722ad3e0d418480aaa97))
+
 ## [0.6.1](https://github.com/PsiQ/qref/compare/v0.6.0...v0.6.1) (2024-07-12)
 
 
