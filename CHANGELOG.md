@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/PsiQ/qref/compare/v0.6.0...v0.6.1) (2024-07-12)
+
+
+### Bug Fixes
+
+* Fix issues with connection validation ([#108](https://github.com/PsiQ/qref/issues/108)) ([13f0325](https://github.com/PsiQ/qref/commit/13f032550116590ccdfe626714ff604d86844bcb))
+
 ## [0.6.0](https://github.com/PsiQ/qref/compare/v0.5.0...v0.6.0) (2024-07-09)
 
 
