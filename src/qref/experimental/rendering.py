@@ -122,7 +122,7 @@ def _add_nonleaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
         for connection in routine.connections:
             cluster.edge(
                 _format_node_name(connection.source, routine, full_path),
-                _format_node_name(connection.target, routine, full_path)
+                _format_node_name(connection.target, routine, full_path),
             )
 
 
