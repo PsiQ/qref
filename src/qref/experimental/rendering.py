@@ -71,28 +71,28 @@ PORT_GROUP_ATTRS = {"rank": "same"}  # Place all ports in the group in the same 
 CLUSTER_KWARGS = {"style": "rounded"}  # Make cluster edges rounded
 
 
-def _format_node_name(node_name, parent):
+def _format_node_name(node_name, parent, full_path):
     """Given a node name and a parent container, format it accordingly.
 
     Read the module-level docstring for explanation why different port formats
     of ports are being used.
     """
     if "." not in node_name:  # Case 1: parent port (=> port is a graphviz node)
-        return node_name
+        return f'"{full_path}.{node_name}"'
 
     # Resolve the child, assume the graph is correct and thus the child exists.
     child_name, port_name = node_name.split(".")
     child = next(iter((child for child in parent.children if child.name == child_name)))
     if child.children:  # Case 2: port of non-leaf child (=> port is a graphviz node)
-        return node_name
+        return f'"{full_path}.{node_name}"'
     else:  # Case 3: port of leaf child (=> port is an actual port of Mrecord, use ":")
-        return f"{child_name}: {port_name}"
+        return f'"{full_path}.{child_name}":{port_name}'
 
 
 def _add_nonleaf_ports(ports, parent_cluster, parent_path: str, group_name):
     with parent_cluster.subgraph(name=f"{parent_path}: {group_name}", graph_attr=PORT_GROUP_ATTRS) as subgraph:
         for port in ports:
-            subgraph.node(name=f"{parent_path}.{port.name}", label=port.name, **PORT_NODE_KWARGS)
+            subgraph.node(name=f'"{parent_path}.{port.name}"', label=port.name, **PORT_NODE_KWARGS)
 
 
 def _split_ports(ports):
@@ -121,8 +121,8 @@ def _add_nonleaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
 
         for connection in routine.connections:
             cluster.edge(
-                full_path + "." + _format_node_name(connection.source, routine),
-                full_path + "." + _format_node_name(connection.target, routine),
+                _format_node_name(connection.source, routine, full_path),
+                _format_node_name(connection.target, routine, full_path),
             )
 
 
@@ -133,7 +133,7 @@ def _ports_row(ports) -> str:
 def _add_leaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
     input_ports, output_ports = _split_ports(routine.ports)
     label = f"{{{_ports_row(input_ports)}|{routine.name}|{_ports_row(output_ports)}}}"
-    dag.node(".".join((parent_path, routine.name)), label=label, **LEAF_NODE_KWARGS)
+    dag.node(f'"{".".join((parent_path, routine.name))}"', label=label, **LEAF_NODE_KWARGS)
 
 
 def _add_routine(routine, dag: graphviz.Digraph, parent_path: str = "") -> None:

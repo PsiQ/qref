@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.6.2](https://github.com/PsiQ/qref/compare/v0.6.1...v0.6.2) (2024-07-12)
+
+
+### Bug Fixes
+
+* Fix incorrect rendering with graphviz ([#110](https://github.com/PsiQ/qref/issues/110)) ([cc4503f](https://github.com/PsiQ/qref/commit/cc4503fa9aeb51609ee2722ad3e0d418480aaa97))
+
+## [0.6.1](https://github.com/PsiQ/qref/compare/v0.6.0...v0.6.1) (2024-07-12)
+
+
+### Bug Fixes
+
+* Fix issues with connection validation ([#108](https://github.com/PsiQ/qref/issues/108)) ([13f0325](https://github.com/PsiQ/qref/commit/13f032550116590ccdfe626714ff604d86844bcb))
+
+## [0.6.0](https://github.com/PsiQ/qref/compare/v0.5.0...v0.6.0) (2024-07-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* Convert local_variables from list of strings to dictionary ([#106](https://github.com/PsiQ/qref/issues/106))
+
+### Miscellaneous Chores
+
+* release 0.6.0 ([efdaa4c](https://github.com/PsiQ/qref/commit/efdaa4c1b69baa32ce6875e089b8ac895ab2519e))
+
+
+### Code Refactoring
+
+* Convert local_variables from list of strings to dictionary ([#106](https://github.com/PsiQ/qref/issues/106)) ([62697e0](https://github.com/PsiQ/qref/commit/62697e071500916b7dd920136cf63e196434a46d))
+
 ## [0.5.0](https://github.com/PsiQ/qref/compare/v0.4.0...v0.5.0) (2024-06-25)
 
 

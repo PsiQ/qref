@@ -23,5 +23,39 @@
         - source: foo.out_0
           target: bar.in_1
   description: "Connection contains non-existent port name"
-  error_path: "$.program.connections[0].source"
-  error_message: "'foo.foo.out_0' does not match '^(([A-Za-z_][A-Za-z0-9_]*)|([A-Za-z_][A-Za-z0-9_]*\\\\.[A-Za-z_][A-Za-z0-9_]*))$'"
+- input:
+    version: v1
+    program:
+      name: root
+      children:
+        - name: foo
+          ports:
+            - name: in_0
+              direction: inpt  # Warning: intentional typo here!
+              size: 1
+            - name: out_0
+              direction: output
+              size: 1
+        - name: bar
+          ports:
+            - name: in_0
+              direction: input
+              size: 1
+            - name: out_0
+              direction: output
+              size: 1
+      ports:
+        - name: in_0
+          direction: input
+          size: 1
+        - name: out_0
+          direction: output
+          size: 1
+      connections:
+        - source: in_0
+          target: foo.in_0
+        - source: foo.out_0
+          target: bar.in_0
+        - source: bar.oout_0  # Warning: intentional typo here!
+          target: out_0
+  description: "Validation error in child and in connections."

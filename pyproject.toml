@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qref"
-version = "0.5.0"
+version = "0.6.2"
 description = "Quantum Resource Estimation Format"
 authors = ["PsiQuantum, Corp."]
 license = "Apache 2.0"
@@ -51,3 +51,9 @@ target-version = ['py39']
 [[tool.mypy.overrides]]
 module = "graphviz.*"
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+markers = [
+    "invalid_schema_examples",
+    "invalid_pydantic_examples"
+]

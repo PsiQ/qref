@@ -228,4 +228,13 @@
   description: "Target of a paramater link is not namespaced"
   error_path: "$.program.linked_params[0].targets[0]"
   error_message: "'N' does not match '^([A-Za-z_][A-Za-z0-9_]*\\\\.)+[A-Za-z_][A-Za-z0-9_]*$'"
-  
+- input:
+    version: v1
+    program:
+      name: "root"
+      input_params:
+        - N
+      local_variables: ["R = N+1"]
+  description: Routine uses old format for local_variables
+  error_path: "$.program.local_variables"
+  error_message: "['R = N+1'] is not of type 'object'"

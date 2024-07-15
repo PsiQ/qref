@@ -13,13 +13,16 @@
 # limitations under the License.
 
 """Common fixtures for QREF tests."""
-
+from functools import lru_cache
 from pathlib import Path
 
 import pytest
 import yaml
 
-VALID_PROGRAMS_ROOT_PATH = Path(__file__).parent / "qref/data/valid_programs"
+DATA_ROOT_PATH = Path(__file__).parent / "qref/data"
+VALID_PROGRAMS_ROOT_PATH = DATA_ROOT_PATH / "valid_programs"
+INVALID_YAML_PROGRAMS_PATH = DATA_ROOT_PATH / "invalid_yaml_programs.yaml"
+INVALID_PYDANTIC_PROGRAMS_PATH = DATA_ROOT_PATH / "invalid_pydantic_programs.yaml"
 
 
 def _load_valid_examples():
@@ -32,3 +35,33 @@ def _load_valid_examples():
 @pytest.fixture(params=_load_valid_examples())
 def valid_program(request):
     return request.param
+
+
+@lru_cache(maxsize=None)
+def _load_yaml(path):
+    with open(path) as f:
+        return yaml.safe_load(f)
+
+
+def pytest_generate_tests(metafunc):
+    marker_names = [marker.name for marker in metafunc.definition.iter_markers()]
+    if "invalid_schema_examples" in marker_names:
+        data = _load_yaml(INVALID_YAML_PROGRAMS_PATH)
+        metafunc.parametrize(
+            "input, error_path, error_message",
+            [
+                pytest.param(
+                    example["input"],
+                    example["error_path"],
+                    example["error_message"],
+                    id=example["description"],
+                )
+                for example in data
+            ],
+        )
+    elif "invalid_pydantic_examples" in marker_names:
+        data = [
+            example["input"]
+            for example in (_load_yaml(INVALID_YAML_PROGRAMS_PATH) + _load_yaml(INVALID_PYDANTIC_PROGRAMS_PATH))
+        ]
+        metafunc.parametrize("input", data)
