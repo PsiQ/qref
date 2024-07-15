@@ -120,7 +120,7 @@ have to do with the fact that we wanted our structure
 to be recursive.
 
 To quickly explain what recursive in this context means,
-let's think about `program` and its `chidren`. Both of
+let's think about `program` and its `children`. Both of
 them can be viewed as objects of the same type. The
 `program` is a *routine* which can contain other routines
 as its `children`. Each of the children can have
