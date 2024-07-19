@@ -132,3 +132,23 @@ There are three types of connections:
   ```yaml
   {source: in_0, target: out}
   ```
+
+Writing connections in this way migh be cumbersome. However, there exists
+an alternative, more concise syntax. Instead writing:
+
+```yaml
+{source: a.out, target: b.in}
+```
+you can write:
+```
+"a.out -> b.in"
+```
+
+With this concise notation, the example program we've seen at the very
+beginning looks as follows:
+
+=== "YAML"
+
+    ```yaml
+    --8<-- "basic_program_concise.yaml"
+    ```

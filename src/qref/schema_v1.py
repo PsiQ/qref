@@ -21,6 +21,7 @@ from typing import Annotated, Any, Literal, Optional, Union
 from pydantic import (
     AfterValidator,
     BaseModel,
+    BeforeValidator,
     ConfigDict,
     Field,
     StringConstraints,
@@ -30,17 +31,17 @@ from pydantic.json_schema import GenerateJsonSchema
 from typing_extensions import Self
 
 NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
-OPTIONALLY_NAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)?{NAME_PATTERN}$"
-MULTINAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)+{NAME_PATTERN}$"
-OPTIONALLY_MULTINAMESPACED_NAME_PATTERN = rf"^({NAME_PATTERN}\.)*{NAME_PATTERN}$"
+OPTIONALLY_NAMESPACED_NAME_PATTERN = rf"({NAME_PATTERN}\.)?{NAME_PATTERN}"
+MULTINAMESPACED_NAME_PATTERN = rf"({NAME_PATTERN}\.)+{NAME_PATTERN}"
+OPTIONALLY_MULTINAMESPACED_NAME_PATTERN = rf"({NAME_PATTERN}\.)*{NAME_PATTERN}"
+CONNECTION_PATTERN = rf"{OPTIONALLY_MULTINAMESPACED_NAME_PATTERN} -> {OPTIONALLY_MULTINAMESPACED_NAME_PATTERN}"
 
 _Name = Annotated[str, StringConstraints(pattern=rf"^{NAME_PATTERN}$")]
-_OptionallyNamespacedName = Annotated[str, StringConstraints(pattern=rf"{OPTIONALLY_NAMESPACED_NAME_PATTERN}")]
-_MultiNamespacedName = Annotated[str, StringConstraints(pattern=rf"{MULTINAMESPACED_NAME_PATTERN}")]
+_OptionallyNamespacedName = Annotated[str, StringConstraints(pattern=rf"^{OPTIONALLY_NAMESPACED_NAME_PATTERN}$")]
+_MultiNamespacedName = Annotated[str, StringConstraints(pattern=rf"^{MULTINAMESPACED_NAME_PATTERN}$")]
 _OptionallyMultiNamespacedName = Annotated[
-    str, StringConstraints(pattern=rf"{OPTIONALLY_MULTINAMESPACED_NAME_PATTERN}")
+    str, StringConstraints(pattern=rf"^{OPTIONALLY_MULTINAMESPACED_NAME_PATTERN}$")
 ]
-
 _Value = Union[int, float, str]
 
 
@@ -53,6 +54,32 @@ def _sorter(key):
 
 _name_sorter = AfterValidator(_sorter(lambda p: p.name))
 _source_sorter = AfterValidator(_sorter(lambda c: c.source))
+
+
+def _parse_connection(connection):
+    if isinstance(connection, str):
+        source, target = connection.replace(" ", "").split("->")
+        return {"source": source, "target": target}
+    return connection
+
+
+_connection_parser = BeforeValidator(_parse_connection)
+
+
+CONNECTION_SCHEMA = {
+    "type": "array",
+    "items": {
+        "anyOf": [
+            {"$ref": "#/$defs/Connection"},
+            {
+                "pattern": f"^{CONNECTION_PATTERN}$",
+                "type": "string",
+            },
+        ]
+    },
+    "title": "Connections",
+    "type": "array",
+}
 
 
 class PortV1(BaseModel):
@@ -105,7 +132,9 @@ class RoutineV1(BaseModel):
     type: Optional[str] = None
     ports: Annotated[list[PortV1], _name_sorter] = Field(default_factory=list)
     resources: Annotated[list[ResourceV1], _name_sorter] = Field(default_factory=list)
-    connections: Annotated[list[ConnectionV1], _source_sorter] = Field(default_factory=list)
+    connections: Annotated[list[Annotated[ConnectionV1, _connection_parser]], _source_sorter] = Field(
+        default_factory=list
+    )
     input_params: list[_OptionallyMultiNamespacedName] = Field(default_factory=list)
     local_variables: dict[str, str] = Field(default_factory=dict)
     linked_params: Annotated[list[ParamLinkV1], _source_sorter] = Field(default_factory=list)
@@ -148,6 +177,7 @@ class _GenerateV1JsonSchema(GenerateJsonSchema):
         json_schema = super().generate(schema, mode=mode)
         json_schema["title"] = "FTQC-ready quantum program"
         json_schema["$schema"] = self.schema_dialect
+        json_schema["$defs"]["Routine"]["properties"]["connections"] = CONNECTION_SCHEMA
         return json_schema
 
     def normalize_name(self, name):
