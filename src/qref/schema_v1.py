@@ -34,7 +34,7 @@ NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
 OPTIONALLY_NAMESPACED_NAME_PATTERN = rf"({NAME_PATTERN}\.)?{NAME_PATTERN}"
 MULTINAMESPACED_NAME_PATTERN = rf"({NAME_PATTERN}\.)+{NAME_PATTERN}"
 OPTIONALLY_MULTINAMESPACED_NAME_PATTERN = rf"({NAME_PATTERN}\.)*{NAME_PATTERN}"
-CONNECTON_PATTERN = rf"{OPTIONALLY_MULTINAMESPACED_NAME_PATTERN} -> {OPTIONALLY_MULTINAMESPACED_NAME_PATTERN}"
+CONNECTION_PATTERN = rf"{OPTIONALLY_MULTINAMESPACED_NAME_PATTERN} -> {OPTIONALLY_MULTINAMESPACED_NAME_PATTERN}"
 
 _Name = Annotated[str, StringConstraints(pattern=rf"^{NAME_PATTERN}$")]
 _OptionallyNamespacedName = Annotated[str, StringConstraints(pattern=rf"^{OPTIONALLY_NAMESPACED_NAME_PATTERN}$")]
@@ -72,10 +72,7 @@ CONNECTION_SCHEMA = {
         "anyOf": [
             {"$ref": "#/$defs/Connection"},
             {
-                "pattern": (
-                    "^([A-Za-z_][A-Za-z0-9_]*\\.)*[A-Za-z_][A-Za-z0-9_]* -> "
-                    "([A-Za-z_][A-Za-z0-9_]*\\.)*[A-Za-z_][A-Za-z0-9_]*$"
-                ),
+                "pattern": f"^{CONNECTION_PATTERN}$",
                 "type": "string",
             },
         ]
