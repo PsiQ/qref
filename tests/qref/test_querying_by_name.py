@@ -62,6 +62,19 @@ class TestAccessingChildrenByName:
 
         assert [child.name for child in example_routine.children] == ["a"]
 
+    def test_trying_to_get_nonexisting_child_raises_key_error(self, example_routine):
+        with pytest.raises(KeyError) as exc_info:
+            _ = example_routine.children.by_name["x"]
+
+        assert exc_info.value.args == ("x",)
+
+    def test_nonexistent_child_cannot_be_set(self, example_routine):
+        with pytest.raises(KeyError) as exc_info:
+            new_child = RoutineV1(name="x")
+            example_routine.children.by_name["x"] = new_child
+
+        assert exc_info.value.args == ("x",)
+
 
 class TestAccessingPortsByName:
     def test_can_get_port_by_name(self, example_routine):
@@ -78,6 +91,19 @@ class TestAccessingPortsByName:
 
         assert [port.name for port in example_routine.ports] == ["in_0"]
 
+    def test_trying_to_get_nonexisting_port_raises_key_error(self, example_routine):
+        with pytest.raises(KeyError) as exc_info:
+            _ = example_routine.ports.by_name["in_10"]
+
+        assert exc_info.value.args == ("in_10",)
+
+    def test_nonexistent_port_cannot_be_set(self, example_routine):
+        with pytest.raises(KeyError) as exc_info:
+            new_port = PortV1(name="in_10", size=42, direction="input")
+            example_routine.children.by_name["in_10"] = new_port
+
+        assert exc_info.value.args == ("in_10",)
+
 
 class TestAccessingResourcesByName:
     def test_can_get_resource_by_name(self, example_routine):
@@ -93,3 +119,16 @@ class TestAccessingResourcesByName:
         del example_routine.resources.by_name["n_toffs"]
 
         assert [resource.name for resource in example_routine.resources] == ["n_rotations"]
+
+    def test_trying_to_get_nonexisting_resource_raises_key_error(self, example_routine):
+        with pytest.raises(KeyError) as exc_info:
+            _ = example_routine.resources.by_name["n_qubits"]
+
+        assert exc_info.value.args == ("n_qubits",)
+
+    def test_nonexistent_resource_cannot_be_set(self, example_routine):
+        with pytest.raises(KeyError) as exc_info:
+            new_resource = ResourceV1(name="n_qubits", value=42, type="other")
+            example_routine.resources.by_name["n_qubits"] = new_resource
+
+        assert exc_info.value.args == ("n_qubits",)
