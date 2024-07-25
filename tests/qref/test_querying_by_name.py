@@ -13,7 +13,7 @@
 # limitations under the License.
 import pytest
 
-from qref.schema_v1 import PortV1, RoutineV1
+from qref.schema_v1 import PortV1, ResourceV1, RoutineV1
 
 
 @pytest.fixture
@@ -34,6 +34,10 @@ def example_routine():
             "ports": [
                 {"name": "in_0", "size": 2, "direction": "input"},
                 {"name": "out_0", "size": 3, "direction": "output"},
+            ],
+            "resources": [
+                {"name": "n_rotations", "value": 4, "type": "additive"},
+                {"name": "n_toffs", "value": 100, "type": "additive"},
             ],
         }
     )
@@ -73,3 +77,19 @@ class TestAccessingPortsByName:
         del example_routine.ports.by_name["out_0"]
 
         assert [port.name for port in example_routine.ports] == ["in_0"]
+
+
+class TestAccessingResourcesByName:
+    def test_can_get_resource_by_name(self, example_routine):
+        assert example_routine.resources.by_name["n_toffs"] == example_routine.resources[1]
+
+    def test_can_set_resource_by_name(self, example_routine):
+        new_resource = ResourceV1(name="n_toffs", value=10, type="multiplicative")
+        example_routine.resources.by_name["n_toffs"] = new_resource
+
+        assert example_routine.resources[1] == new_resource
+
+    def test_can_delete_resource_by_name(self, example_routine):
+        del example_routine.resources.by_name["n_toffs"]
+
+        assert [resource.name for resource in example_routine.resources] == ["n_rotations"]
