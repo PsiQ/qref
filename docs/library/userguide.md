@@ -51,6 +51,15 @@ data = load_some_program()
 program = SchemaV1.model_validate(data)
 ```
 
+One of the benefits of using QREF's pydantic models is ability to obtain objects like children, ports
+or resources by name, instead of list indices. This is done by special `.by_name` accessor. For instance
+to get a child named `"foo"` of a `routine` object, one can use the following syntax:
+
+```python
+foo = routine.children.by_name["foo"]
+```
+
+
 ### Topology validation
 
 There can be cases where a program is correct from the perspective of Pydantic validation, but has incorrect topology. This includes cases such as:
