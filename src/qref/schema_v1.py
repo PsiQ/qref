@@ -16,7 +16,17 @@
 
 from __future__ import annotations
 
-from typing import Annotated, Any, Literal, Optional, Union
+from typing import (
+    Annotated,
+    Any,
+    Iterator,
+    Literal,
+    MutableMapping,
+    Optional,
+    TypeVar,
+    Union,
+    get_args,
+)
 
 from pydantic import (
     AfterValidator,
@@ -28,6 +38,7 @@ from pydantic import (
     model_validator,
 )
 from pydantic.json_schema import GenerateJsonSchema
+from pydantic_core import core_schema
 from typing_extensions import Self
 
 NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
@@ -44,15 +55,61 @@ _OptionallyMultiNamespacedName = Annotated[
 ]
 _Value = Union[int, float, str]
 
+T = TypeVar("T")
 
-def _sorter(key):
+
+class _ProxyMapping(MutableMapping[str, T]):
+    def __init__(self, source: list[T]):
+        self.source = source
+
+    def _find_item(self, name: str) -> tuple[int, T]:
+        try:
+            # To avoid the type: ignore below, we would have to define a protocol for named things,
+            # which seems to be an overkill, especially that this class is private.
+            return next(iter([(i, item) for i, item in enumerate(self.source) if item.name == name]))  # type: ignore
+        except StopIteration:
+            raise KeyError(name)
+
+    def __getitem__(self, name: str) -> T:
+        _index, item = self._find_item(name)
+        return item
+
+    def __setitem__(self, name: str, new_item: T) -> None:
+        index, _current_item = self._find_item(name)
+        self.source[index] = new_item
+
+    def __delitem__(self, name: str):
+        index, _current_item = self._find_item(name)
+        del self.source[index]
+
+    def __iter__(self) -> Iterator[str]:
+        # Same reason for type: ignore as above
+        return iter((item.name for item in self.source))  # type: ignore
+
+    def __len__(self) -> int:
+        return len(self.source)
+
+
+class NamedList(list[T]):
+    @property
+    def by_name(self) -> _ProxyMapping[T]:
+        return _ProxyMapping(self)
+
+    @classmethod
+    def __get_pydantic_core_schema__(cls, source, handler):
+        args = get_args(source)
+        schema = handler.generate_schema(list[args[0]])
+        return core_schema.no_info_after_validator_function(NamedList, schema)
+
+
+def _sorter(key, cls=list):
     def _inner(v):
-        return sorted(v, key=key)
+        return cls(sorted(v, key=key))
 
     return _inner
 
 
-_name_sorter = AfterValidator(_sorter(lambda p: p.name))
+_name_sorter = AfterValidator(_sorter(lambda p: p.name, NamedList))
 _source_sorter = AfterValidator(_sorter(lambda c: c.source))
 
 
@@ -128,10 +185,10 @@ class RoutineV1(BaseModel):
     """
 
     name: _Name
-    children: Annotated[list[RoutineV1], _name_sorter] = Field(default_factory=list)
+    children: Annotated[NamedList[RoutineV1], _name_sorter] = Field(default_factory=list)
     type: Optional[str] = None
-    ports: Annotated[list[PortV1], _name_sorter] = Field(default_factory=list)
-    resources: Annotated[list[ResourceV1], _name_sorter] = Field(default_factory=list)
+    ports: Annotated[NamedList[PortV1], _name_sorter] = Field(default_factory=list)
+    resources: Annotated[NamedList[ResourceV1], _name_sorter] = Field(default_factory=list)
     connections: Annotated[list[Annotated[ConnectionV1, _connection_parser]], _source_sorter] = Field(
         default_factory=list
     )
@@ -140,7 +197,7 @@ class RoutineV1(BaseModel):
     linked_params: Annotated[list[ParamLinkV1], _source_sorter] = Field(default_factory=list)
     meta: dict[str, Any] = Field(default_factory=dict)
 
-    model_config = ConfigDict(title="Routine")
+    model_config = ConfigDict(title="Routine", validate_assignment=True)
 
     def __init__(self, **data: Any):
         super().__init__(**{k: v for k, v in data.items() if v != [] and v != {}})
