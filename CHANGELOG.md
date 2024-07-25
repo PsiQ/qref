@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.7.0](https://github.com/PsiQ/qref/compare/v0.6.2...v0.7.0) (2024-07-25)
+
+
+### Features
+
+* Allow more concise definition of connections ([#113](https://github.com/PsiQ/qref/issues/113)) ([54f963c](https://github.com/PsiQ/qref/commit/54f963ceaf7680bf7c892e5f12606f019bda9abf))
+* Implement accessing ports/children/resources by name ([#114](https://github.com/PsiQ/qref/issues/114)) ([b2920bd](https://github.com/PsiQ/qref/commit/b2920bd3de4656fefbaa20338cc0775491b0d946))
+
+
+### Documentation
+
+* Add section with design choices ([#105](https://github.com/PsiQ/qref/issues/105)) ([cae329b](https://github.com/PsiQ/qref/commit/cae329b63fca0e9057df5baaf067218b423247db))
+
 ## [0.6.2](https://github.com/PsiQ/qref/compare/v0.6.1...v0.6.2) (2024-07-12)
 
 
