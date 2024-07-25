@@ -195,7 +195,7 @@ class RoutineV1(BaseModel):
     linked_params: Annotated[list[ParamLinkV1], _source_sorter] = Field(default_factory=list)
     meta: dict[str, Any] = Field(default_factory=dict)
 
-    model_config = ConfigDict(title="Routine")
+    model_config = ConfigDict(title="Routine", validate_assignment=True)
 
     def __init__(self, **data: Any):
         super().__init__(**{k: v for k, v in data.items() if v != [] and v != {}})
