@@ -19,6 +19,7 @@ from __future__ import annotations
 from typing import (
     Annotated,
     Any,
+    Iterator,
     Literal,
     MutableMapping,
     Optional,
@@ -69,22 +70,23 @@ class _ProxyMapping(MutableMapping[str, T]):
         except StopIteration:
             raise KeyError(name)
 
-    def __getitem__(self, name):
+    def __getitem__(self, name: str) -> T:
         _index, item = self._find_item(name)
         return item
 
-    def __setitem__(self, name, new_item):
+    def __setitem__(self, name: str, new_item: T) -> None:
         index, _current_item = self._find_item(name)
         self.source[index] = new_item
 
-    def __delitem__(self, name):
+    def __delitem__(self, name: str):
         index, _current_item = self._find_item(name)
         del self.source[index]
 
-    def __iter__(self):
-        return [item.name for item in self.source]
+    def __iter__(self) -> Iterator[str]:
+        # Same reason for type: ignore as above
+        return iter((item.name for item in self.source))  # type: ignore
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.source)
 
 
