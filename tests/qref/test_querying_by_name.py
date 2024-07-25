@@ -1,0 +1,75 @@
+# Copyright 2024 PsiQuantum, Corp.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import pytest
+
+from qref.schema_v1 import PortV1, RoutineV1
+
+
+@pytest.fixture
+def example_routine():
+    return RoutineV1.model_validate(
+        {
+            "name": "root",
+            "children": [
+                {
+                    "name": "a",
+                    "ports": [
+                        {"name": "ctrl", "size": "N", "direction": "input"},
+                        {"name": "target", "size": "N", "direction": "input"},
+                    ],
+                },
+                {"name": "b", "children": [{"name": "c"}]},
+            ],
+            "ports": [
+                {"name": "in_0", "size": 2, "direction": "input"},
+                {"name": "out_0", "size": 3, "direction": "output"},
+            ],
+        }
+    )
+
+
+class TestAccessingChildrenByName:
+    def test_can_get_direct_child_by_name(self, example_routine):
+        assert example_routine.children.by_name["a"] == example_routine.children[0]
+
+    def test_can_get_nested_child_by_name(self, example_routine):
+        assert example_routine.children.by_name["b"].children.by_name["c"] == example_routine.children[1].children[0]
+
+    def test_can_set_child_by_name(self, example_routine):
+        new_child = RoutineV1(name="b")
+        example_routine.children.by_name["b"] = new_child
+
+        assert example_routine.children[1] == new_child
+        assert example_routine.children.by_name["b"] == new_child
+
+    def test_can_delete_child_by_name(self, example_routine):
+        del example_routine.children.by_name["b"]
+
+        assert [child.name for child in example_routine.children] == ["a"]
+
+
+class TestAccessingPortsByName:
+    def test_can_get_port_by_name(self, example_routine):
+        assert example_routine.ports.by_name["in_0"] == example_routine.ports[0]
+
+    def test_can_set_port_by_name(self, example_routine):
+        new_port = PortV1(name="ctrl", direction="input", size=10)
+        example_routine.children[0].ports.by_name["ctrl"] = new_port
+
+        assert example_routine.children[0].ports[0] == new_port
+
+    def test_can_delete_port_by_name(self, example_routine):
+        del example_routine.ports.by_name["out_0"]
+
+        assert [port.name for port in example_routine.ports] == ["in_0"]
