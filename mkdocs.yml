@@ -17,6 +17,7 @@ nav:
   - design.md
 theme:
   name: material
+  logo: assets/logo_white.png
   palette:
     primary: custom
     accent: custom
