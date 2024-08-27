@@ -1,4 +1,4 @@
-<h1><img src="assets/images/logo.png" width=20> QREF</h1>
+<h1><img src="docs/assets/logo.png" width=20> QREF</h1>
 
 Quantum Resource Estimation Format (QREF) is an open format for representing
 quantum algorithms, optimized for usage in quantum resource estimation (QRE).
