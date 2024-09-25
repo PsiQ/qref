@@ -16,17 +16,8 @@
 
 from __future__ import annotations
 
-from typing import (
-    Annotated,
-    Any,
-    Iterator,
-    Literal,
-    MutableMapping,
-    Optional,
-    TypeVar,
-    Union,
-    get_args,
-)
+from collections.abc import Iterator, MutableMapping
+from typing import Annotated, Any, Literal, TypeVar, get_args
 
 from pydantic import (
     AfterValidator,
@@ -53,7 +44,7 @@ _MultiNamespacedName = Annotated[str, StringConstraints(pattern=rf"^{MULTINAMESP
 _OptionallyMultiNamespacedName = Annotated[
     str, StringConstraints(pattern=rf"^{OPTIONALLY_MULTINAMESPACED_NAME_PATTERN}$")
 ]
-_Value = Union[int, float, str]
+_Value = int | float | str
 
 T = TypeVar("T")
 
@@ -144,7 +135,7 @@ class PortV1(BaseModel):
 
     name: _Name
     direction: Literal["input", "output", "through"]
-    size: Optional[_Value]
+    size: _Value | None
     model_config = ConfigDict(title="Port")
 
 
@@ -162,7 +153,7 @@ class ResourceV1(BaseModel):
 
     name: _Name
     type: Literal["additive", "multiplicative", "qubits", "other"]
-    value: Union[int, float, str, None]
+    value: _Value | None
 
     model_config = ConfigDict(title="Resource")
 
@@ -186,7 +177,7 @@ class RoutineV1(BaseModel):
 
     name: _Name
     children: Annotated[NamedList[RoutineV1], _name_sorter] = Field(default_factory=list)
-    type: Optional[str] = None
+    type: str | None = None
     ports: Annotated[NamedList[PortV1], _name_sorter] = Field(default_factory=list)
     resources: Annotated[NamedList[ResourceV1], _name_sorter] = Field(default_factory=list)
     connections: Annotated[list[Annotated[ConnectionV1, _connection_parser]], _source_sorter] = Field(

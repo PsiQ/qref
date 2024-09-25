@@ -14,9 +14,11 @@
 
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Optional, Union
 
+from .functools import accepts_all_qref_types
 from .schema_v1 import RoutineV1, SchemaV1
+
+AdjacencyList = dict[str, list[str]]
 
 
 @dataclass
@@ -33,7 +35,8 @@ class TopologyVerificationOutput:
         return self.is_valid
 
 
-def verify_topology(routine: Union[SchemaV1, RoutineV1]) -> TopologyVerificationOutput:
+@accepts_all_qref_types
+def verify_topology(routine: SchemaV1 | RoutineV1) -> TopologyVerificationOutput:
     """Checks whether program has correct topology.
 
     Correct topology cannot include cycles or disconnected ports.
@@ -48,26 +51,23 @@ def verify_topology(routine: Union[SchemaV1, RoutineV1]) -> TopologyVerification
 
 
 def _verify_routine_topology(routine: RoutineV1) -> list[str]:
-    problems = []
     adjacency_list = _get_adjacency_list_from_routine(routine, path=None)
 
-    problems += _find_cycles(adjacency_list)
-    problems += _find_disconnected_ports(routine)
-
-    for child in routine.children:
-        new_problems = _verify_routine_topology(child)
-        problems += new_problems
-    return problems
+    return [
+        *_find_cycles(adjacency_list),
+        *_find_disconnected_ports(routine),
+        *[problem for child in routine.children for problem in _verify_routine_topology(child)],
+    ]
 
 
-def _get_adjacency_list_from_routine(routine: RoutineV1, path: Optional[str]) -> dict[str, list[str]]:
+def _get_adjacency_list_from_routine(routine: RoutineV1, path: str | None) -> AdjacencyList:
     """This function creates a flat graph representing one hierarchy level of a routine.
 
     Nodes represent ports and edges represent connections (they're directed).
     Additionaly, we add node for each children and edges coming from all the input ports
     into the children, and from the children into all the output ports.
     """
-    graph = defaultdict(list)
+    graph = defaultdict[str, list[str]](list)
     if path is None:
         current_path = routine.name
     else:
@@ -81,8 +81,8 @@ def _get_adjacency_list_from_routine(routine: RoutineV1, path: Optional[str]) ->
 
     # Then for each children we add an extra node and set of connections
     for child in routine.children:
-        input_ports = []
-        output_ports = []
+        input_ports: list[str] = []
+        output_ports: list[str] = []
 
         child_path = ".".join([current_path, child.name])
         for port in child.ports:
@@ -99,19 +99,19 @@ def _get_adjacency_list_from_routine(routine: RoutineV1, path: Optional[str]) ->
     return graph
 
 
-def _find_cycles(adjacency_list: dict[str, list[str]]) -> list[str]:
+def _find_cycles(adjacency_list: AdjacencyList) -> list[str]:
     # Note: it only returns the first detected cycle.
-    for node in list(adjacency_list.keys()):
+    for node in list(adjacency_list):
         problem = _dfs_iteration(adjacency_list, node)
         if problem:
             return problem
     return []
 
 
-def _dfs_iteration(adjacency_list, start_node) -> list[str]:
-    to_visit = [start_node]
-    visited = []
-    predecessors = {}
+def _dfs_iteration(adjacency_list: AdjacencyList, start_node: str) -> list[str]:
+    to_visit: list[str] = [start_node]
+    visited: list[str] = []
+    predecessors: dict[str, str] = {}
 
     while to_visit:
         node = to_visit.pop()
@@ -129,8 +129,8 @@ def _dfs_iteration(adjacency_list, start_node) -> list[str]:
     return []
 
 
-def _find_disconnected_ports(routine: RoutineV1):
-    problems = []
+def _find_disconnected_ports(routine: RoutineV1) -> list[str]:
+    problems: list[str] = []
     for child in routine.children:
         for port in child.ports:
             pname = f"{routine.name}.{child.name}.{port.name}"
