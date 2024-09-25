@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+
 from qref.functools import accepts_all_qref_types, ensure_routine
 from qref.schema_v1 import RoutineV1, SchemaV1
 
@@ -27,7 +29,6 @@ def test_ensure_routine_produces_correct_routine_v1_object(valid_program):
 
 
 def test_callables_can_be_augmented_to_accept_all_qref_types(valid_program):
-
     @accepts_all_qref_types
     def identity(r: RoutineV1) -> RoutineV1:
         return r
