@@ -20,7 +20,7 @@ from .schema_v1 import RoutineV1, SchemaV1
 
 
 @singledispatch
-def ensure_routine(data: dict[str, Any]) -> RoutineV1:
+def ensure_routine(data: dict[str, Any] | SchemaV1 | RoutineV1) -> RoutineV1:
     """Ensure that given objects is of RoutineV1 type.
 
     This functions may serve for constructing functions accepting either RoutineV1 oor SchemaV1
@@ -33,8 +33,13 @@ def ensure_routine(data: dict[str, Any]) -> RoutineV1:
         or a dictionary, in which case it will serve to constructe RoutineV1, or SchemaV1.
 
     Returns:
-        Ann object of type RoutineV1 corresponding to the provided data.
+        An object of type RoutineV1 corresponding to the provided data.
     """
+    raise NotImplementedError()
+
+
+@ensure_routine.register
+def _ensure_routine_from_dict(data: dict[str, Any]) -> RoutineV1:
     return SchemaV1(**data).program if "version" in data else RoutineV1(**data)
 
 
