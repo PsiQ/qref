@@ -38,6 +38,8 @@ from pathlib import Path
 import graphviz
 import yaml
 
+from qref.functools import ensure_routine
+
 from .. import SchemaV1
 
 # Dictionary of default graph attributes, used for non-leaf nodes
@@ -142,15 +144,10 @@ def _add_routine(routine, dag: graphviz.Digraph, parent_path: str = "") -> None:
         _add_leaf(routine, dag, parent_path)
 
 
-def _ensure_schema_v1(data: dict | SchemaV1) -> SchemaV1:
-    return data if isinstance(data, SchemaV1) else SchemaV1(**data)
-
-
 def to_graphviz(data: dict | SchemaV1) -> graphviz.Digraph:
     """Convert routine encoded with v1 schema to a graphviz DAG."""
-    data = _ensure_schema_v1(data)
     dag = graphviz.Digraph(graph_attr=GRAPH_ATTRS)
-    _add_routine(data.program, dag)
+    _add_routine(ensure_routine(data), dag)
     return dag
 
 
