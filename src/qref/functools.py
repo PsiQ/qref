@@ -38,7 +38,7 @@ def ensure_routine(data: dict[str, Any] | SchemaV1 | RoutineV1) -> RoutineV1:
     raise NotImplementedError()
 
 
-@ensure_routine.register
+@ensure_routine.register(dict)
 def _ensure_routine_from_dict(data: dict[str, Any]) -> RoutineV1:
     return SchemaV1(**data).program if "version" in data else RoutineV1(**data)
 
