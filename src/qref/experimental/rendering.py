@@ -34,7 +34,6 @@ Because of the above dichotomy, care has to be taken when constructing edges.
 
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import Union
 
 import graphviz
 import yaml
@@ -143,11 +142,11 @@ def _add_routine(routine, dag: graphviz.Digraph, parent_path: str = "") -> None:
         _add_leaf(routine, dag, parent_path)
 
 
-def _ensure_schema_v1(data: Union[dict, SchemaV1]) -> SchemaV1:
+def _ensure_schema_v1(data: dict | SchemaV1) -> SchemaV1:
     return data if isinstance(data, SchemaV1) else SchemaV1(**data)
 
 
-def to_graphviz(data: Union[dict, SchemaV1]) -> graphviz.Digraph:
+def to_graphviz(data: dict | SchemaV1) -> graphviz.Digraph:
     """Convert routine encoded with v1 schema to a graphviz DAG."""
     data = _ensure_schema_v1(data)
     dag = graphviz.Digraph(graph_attr=GRAPH_ATTRS)
