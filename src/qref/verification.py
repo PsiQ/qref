@@ -15,8 +15,8 @@
 from collections import defaultdict
 from dataclasses import dataclass
 
-from .schema_v1 import RoutineV1, SchemaV1
 from .functools import accepts_all_qref_types
+from .schema_v1 import RoutineV1, SchemaV1
 
 AdjacencyList = dict[str, list[str]]
 
