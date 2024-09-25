@@ -38,7 +38,8 @@ from pathlib import Path
 import graphviz
 import yaml
 
-from qref.functools import ensure_routine
+from qref.functools import accepts_all_qref_types, ensure_routine
+from qref.schema_v1 import RoutineV1
 
 from .. import SchemaV1
 
@@ -144,10 +145,11 @@ def _add_routine(routine, dag: graphviz.Digraph, parent_path: str = "") -> None:
         _add_leaf(routine, dag, parent_path)
 
 
-def to_graphviz(data: dict | SchemaV1) -> graphviz.Digraph:
+@accepts_all_qref_types
+def to_graphviz(routine: RoutineV1) -> graphviz.Digraph:
     """Convert routine encoded with v1 schema to a graphviz DAG."""
     dag = graphviz.Digraph(graph_attr=GRAPH_ATTRS)
-    _add_routine(ensure_routine(data), dag)
+    _add_routine(ensure_routine(routine), dag)
     return dag
 
 
