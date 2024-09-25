@@ -13,6 +13,7 @@ nav:
           - qref: library/reference/qref.md
           - qref.schema_v1: library/reference/qref.schema_v1.md
           - qref.experimental.rendering: library/reference/qref.experimental.rendering.md
+          - qref.functools: library/reference/qref.functools.md
   - development.md
   - design.md
 theme:
