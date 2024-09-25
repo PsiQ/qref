@@ -16,6 +16,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 
 from .schema_v1 import RoutineV1, SchemaV1
+from .functools import accepts_all_qref_types
 
 AdjacencyList = dict[str, list[str]]
 
@@ -34,6 +35,7 @@ class TopologyVerificationOutput:
         return self.is_valid
 
 
+@accepts_all_qref_types
 def verify_topology(routine: SchemaV1 | RoutineV1) -> TopologyVerificationOutput:
     """Checks whether program has correct topology.
 
