@@ -18,9 +18,11 @@ from typing import Any, Callable, Concatenate, ParamSpec, TypeVar
 
 from .schema_v1 import RoutineV1, SchemaV1
 
+AnyQrefType = dict[str, Any] | SchemaV1 | RoutineV1
+
 
 @singledispatch
-def ensure_routine(data: dict[str, Any] | SchemaV1 | RoutineV1) -> RoutineV1:
+def ensure_routine(data: AnyQrefType) -> RoutineV1:
     """Ensure that given objects is of RoutineV1 type.
 
     This functions may serve for constructing functions accepting either RoutineV1 oor SchemaV1
@@ -57,9 +59,7 @@ P = ParamSpec("P")
 T = TypeVar("T")
 
 
-def accepts_all_qref_types(
-    f: Callable[Concatenate[RoutineV1, P], T]
-) -> Callable[Concatenate[SchemaV1 | RoutineV1 | dict[str, Any], P], T]:
+def accepts_all_qref_types(f: Callable[Concatenate[RoutineV1, P], T]) -> Callable[Concatenate[AnyQrefType, P], T]:
     """Make a callable accepting RoutineV1 as first arg capable of accepting arbitrary QREF object.
 
     Here, by arbitrary QREF object we mean either an instance of SchemaV1, an instance of RoutineV1,
