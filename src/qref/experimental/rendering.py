@@ -47,6 +47,7 @@ from .. import SchemaV1
 GRAPH_ATTRS = {
     "rankdir": "LR",  # Draw left to right (default is top to bottom)
     "fontname": "Helvetica",
+    "splines": "false",
 }
 
 # Keyword args passed to dag.node for drawing leaf nodes
@@ -100,23 +101,36 @@ def _add_nonleaf_ports(ports, parent_cluster, parent_path: str, group_name):
 def _split_ports(ports):
     input_ports = []
     output_ports = []
+    through_ports = []
     for port in ports:
         if port.direction == "input":
             input_ports.append(port)
         elif port.direction == "output":
             output_ports.append(port)
         else:
-            raise ValueError("Bi-directional ports are not yet supported for rendering")
-    return input_ports, output_ports
+            through_ports.append(port)
+    return input_ports, output_ports, through_ports
 
 
 def _add_nonleaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
-    input_ports, output_ports = _split_ports(routine.ports)
+    input_ports, output_ports, through_ports = _split_ports(routine.ports)
     full_path = f"{parent_path}.{routine.name}"
 
     with dag.subgraph(name=f"cluster_{full_path}", graph_attr={"label": routine.name, **CLUSTER_KWARGS}) as cluster:
         _add_nonleaf_ports(input_ports, cluster, full_path, "inputs")
         _add_nonleaf_ports(output_ports, cluster, full_path, "outputs")
+        _add_nonleaf_ports(through_ports, cluster, full_path, "through")
+
+        # We're adding ghost nodes and edges to position the through ports
+        # in the middle.
+        for port in through_ports:
+            dummy_out = f'"{full_path}.{port.name}_out"'
+            dummy_in = f'"{full_path}.{port.name}_in"'
+            pname = f'"{full_path}.{port.name}"'
+            cluster.node(dummy_in, label="", style="invis")
+            cluster.node(dummy_out, label="", style="invis")
+            cluster.edge(dummy_in, pname, style="invis")
+            cluster.edge(pname, dummy_out, style="invis")
 
         for child in routine.children:
             _add_routine(child, cluster, f"{parent_path}.{routine.name}")
@@ -133,8 +147,10 @@ def _ports_row(ports) -> str:
 
 
 def _add_leaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
-    input_ports, output_ports = _split_ports(routine.ports)
+    input_ports, output_ports, through_ports = _split_ports(routine.ports)
     label = f"{{{_ports_row(input_ports)}|{routine.name}|{_ports_row(output_ports)}}}"
+    if through_ports:
+        label += f"|{_ports_row(through_ports)}"
     dag.node(f'"{".".join((parent_path, routine.name))}"', label=label, **LEAF_NODE_KWARGS)
 
 
