@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from typing import Callable
 
 from .functools import accepts_all_qref_types
-from .schema_v1 import RoutineV1, SchemaV1
+from .schema_v1 import RoutineV1
 
 AdjacencyList = dict[str, list[str]]
 
