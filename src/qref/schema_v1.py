@@ -208,7 +208,7 @@ class RoutineV1(BaseModel):
         if missed_ports:
             raise ValueError(
                 "The following ports appear in a connection but are not "
-                "among routine's port or their children's ports: {missed_ports}."
+                f"among routine's port or their children's ports: {missed_ports}."
             )
         return self
 

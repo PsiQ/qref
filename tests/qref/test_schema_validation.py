@@ -44,3 +44,21 @@ def test_invalid_program_fails_to_validate_with_pydantic_model_v1(input):
 
 def test_valid_program_succesfully_validate_with_pydantic_model_v1(valid_program):
     SchemaV1.model_validate(valid_program)
+
+
+def test_validation_error_includes_name_of_the_missed_port():
+    input = {
+        "version": "v1",
+        "program": {
+            "name": "root",
+            "ports": [{"name": "in_0", "direction": "input", "size": 1}],
+            "connections": ["in_0 -> out_0"],
+        },
+    }
+
+    pattern = (
+        "The following ports appear in a connection but are not among routine's port "
+        r"or their children's ports: \['out_0'\]."  # <- out_0 is the important bit here
+    )
+    with pytest.raises(pydantic.ValidationError, match=pattern):
+        SchemaV1.model_validate(input)
