@@ -86,7 +86,8 @@ Let us first take a look at ports, like the first input port of our program:
 
 Ports, like most other components in QREF, have names, which should be distinct
 among all ports of any given program (or subroutine). Each port also has
-direction, which can be either `input` or `output`. Finally, each port has size.
+direction, which can be either `input`, `output` or `through` (for ports serving as
+both input and output). Finally, each port has size.
 In our simple scenario, all sizes are positive integers. However, QREF
 is not limited to them, and size of a port can be either:
 
