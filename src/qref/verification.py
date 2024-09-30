@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass
+from typing import Callable
 
 from .functools import accepts_all_qref_types
-from .schema_v1 import RoutineV1, SchemaV1
+from .schema_v1 import RoutineV1
 
 AdjacencyList = dict[str, list[str]]
 
@@ -36,7 +37,7 @@ class TopologyVerificationOutput:
 
 
 @accepts_all_qref_types
-def verify_topology(routine: SchemaV1 | RoutineV1) -> TopologyVerificationOutput:
+def verify_topology(routine: RoutineV1) -> TopologyVerificationOutput:
     """Checks whether program has correct topology.
 
     Correct topology cannot include cycles or disconnected ports.
@@ -44,23 +45,32 @@ def verify_topology(routine: SchemaV1 | RoutineV1) -> TopologyVerificationOutput
     Args:
         routine: Routine or program to be verified.
     """
-    if isinstance(routine, SchemaV1):
-        routine = routine.program
     problems = _verify_routine_topology(routine)
     return TopologyVerificationOutput(problems)
 
 
-def _verify_routine_topology(routine: RoutineV1) -> list[str]:
-    adjacency_list = _get_adjacency_list_from_routine(routine, path=None)
+def _make_prefixer(ancestor_path: tuple[str, ...]) -> Callable[[str], str]:
+    def _prefix(text: str) -> str:
+        return ".".join([*ancestor_path, text])
+
+    return _prefix
+
+
+def _verify_routine_topology(routine: RoutineV1, ancestor_path: tuple[str, ...] = ()) -> list[str]:
+    adjacency_list = _get_adjacency_list_from_routine(routine, path=ancestor_path)
 
     return [
-        *_find_cycles(adjacency_list),
-        *_find_disconnected_ports(routine),
-        *[problem for child in routine.children for problem in _verify_routine_topology(child)],
+        *_find_cycles(adjacency_list, ancestor_path),
+        *_find_disconnected_ports(routine, ancestor_path),
+        *[
+            problem
+            for child in routine.children
+            for problem in _verify_routine_topology(child, ancestor_path + (routine.name,))
+        ],
     ]
 
 
-def _get_adjacency_list_from_routine(routine: RoutineV1, path: str | None) -> AdjacencyList:
+def _get_adjacency_list_from_routine(routine: RoutineV1, path: tuple[str, ...]) -> AdjacencyList:
     """This function creates a flat graph representing one hierarchy level of a routine.
 
     Nodes represent ports and edges represent connections (they're directed).
@@ -68,15 +78,12 @@ def _get_adjacency_list_from_routine(routine: RoutineV1, path: str | None) -> Ad
     into the children, and from the children into all the output ports.
     """
     graph = defaultdict[str, list[str]](list)
-    if path is None:
-        current_path = routine.name
-    else:
-        current_path = ".".join([path, routine.name])
+    _prefix = _make_prefixer(path + (routine.name,))
 
     # First, we go through all the connections and add them as adges to the graph
     for connection in routine.connections:
-        source = ".".join([current_path, connection.source])
-        target = ".".join([current_path, connection.target])
+        source = _prefix(connection.source)
+        target = _prefix(connection.target)
         graph[source].append(target)
 
     # Then for each children we add an extra node and set of connections
@@ -84,7 +91,7 @@ def _get_adjacency_list_from_routine(routine: RoutineV1, path: str | None) -> Ad
         input_ports: list[str] = []
         output_ports: list[str] = []
 
-        child_path = ".".join([current_path, child.name])
+        child_path = _prefix(child.name)
         for port in child.ports:
             if port.direction == "input":
                 input_ports.append(".".join([child_path, port.name]))
@@ -99,19 +106,21 @@ def _get_adjacency_list_from_routine(routine: RoutineV1, path: str | None) -> Ad
     return graph
 
 
-def _find_cycles(adjacency_list: AdjacencyList) -> list[str]:
+def _find_cycles(adjacency_list: AdjacencyList, ancestor_path: tuple[str, ...]) -> list[str]:
     # Note: it only returns the first detected cycle.
     for node in list(adjacency_list):
-        problem = _dfs_iteration(adjacency_list, node)
+        problem = _dfs_iteration(adjacency_list, node, ancestor_path)
         if problem:
             return problem
     return []
 
 
-def _dfs_iteration(adjacency_list: AdjacencyList, start_node: str) -> list[str]:
+def _dfs_iteration(adjacency_list: AdjacencyList, start_node: str, ancestor_path: tuple[str, ...]) -> list[str]:
     to_visit: list[str] = [start_node]
     visited: list[str] = []
     predecessors: dict[str, str] = {}
+
+    _prefix = _make_prefixer(ancestor_path)
 
     while to_visit:
         node = to_visit.pop()
@@ -122,29 +131,66 @@ def _dfs_iteration(adjacency_list: AdjacencyList, start_node: str) -> list[str]:
                 # Reconstruct the cycle
                 cycle = [neighbour]
                 while len(cycle) < 2 or cycle[-1] != start_node:
-                    cycle.append(predecessors[cycle[-1]])
+                    cycle.append(_prefix(predecessors[cycle[-1]]))
                 return [f"Cycle detected: {cycle[::-1]}"]
             if neighbour not in visited:
                 to_visit.append(neighbour)
     return []
 
 
-def _find_disconnected_ports(routine: RoutineV1) -> list[str]:
+def _find_disconnected_ports(routine: RoutineV1, ancestor_path: tuple[str, ...]) -> list[str]:
     problems: list[str] = []
+
+    _prefix = _make_prefixer(ancestor_path + (routine.name,))
+
+    sources_counts = Counter[str]()
+    target_counts = Counter[str]()
+
+    for connection in routine.connections:
+        sources_counts[connection.source] += 1
+        target_counts[connection.target] += 1
+
+    multi_sources = [source for source, count in sources_counts.items() if count > 1]
+
+    multi_targets = [target for target, count in target_counts.items() if count > 1]
+
+    if multi_sources:
+        problems.append(f"Too many outgoing connections from {','.join(_prefix(target) for target in multi_sources)}.")
+
+    if multi_targets:
+        problems.append(f"Too many incoming connections to {','.join(_prefix(target) for target in multi_targets)}.")
+
+    requiring_outgoing = set[str]()
+    requiring_incoming = set[str]()
+    thru_ports = set[str]()
+
+    for port in routine.ports:
+        if port.direction == "input" and routine.children:
+            requiring_outgoing.add(port.name)
+        elif port.direction == "output" and routine.children:
+            requiring_incoming.add(port.name)
+        elif port.direction == "through":  # Note: through ports have to be valid regardless of existence of children
+            thru_ports.add(port.name)
+
     for child in routine.children:
+        # Directions are reversed compared to parent + through ports have to be connected on both ends
         for port in child.ports:
-            pname = f"{routine.name}.{child.name}.{port.name}"
-            if port.direction == "input":
-                matches_in = [c for c in routine.connections if c.target == f"{child.name}.{port.name}"]
-                if len(matches_in) == 0:
-                    problems.append(f"No incoming connections to {pname}.")
-                elif len(matches_in) > 1:
-                    problems.append(f"Too many incoming connections to {pname}.")
-            elif port.direction == "output":
-                matches_out = [c for c in routine.connections if c.source == f"{child.name}.{port.name}"]
-                if len(matches_out) == 0:
-                    problems.append(f"No outgoing connections from {pname}.")
-                elif len(matches_out) > 1:
-                    problems.append(f"Too many outgoing connections from {pname}.")
+            pname = f"{child.name}.{port.name}"
+            if port.direction != "output":
+                requiring_incoming.add(pname)
+            if port.direction != "input":
+                requiring_outgoing.add(pname)
+
+    for pname in requiring_outgoing:
+        if pname not in sources_counts:
+            problems.append(f"No outgoing connection from {_prefix(pname)}.")
+
+    for pname in requiring_incoming:
+        if pname not in target_counts:
+            problems.append(f"No incoming connection to {_prefix(pname)}.")
+
+    for pname in thru_ports:
+        if pname in sources_counts or pname in target_counts:
+            problems.append(f"A through port {_prefix(pname)} is connected via an internal connection.")
 
     return problems

@@ -128,7 +128,65 @@
     version: v1
   description: Program has badly connected ports
   problems:
-  - "No incoming connections to root.child_1.in_1."
+  - "No incoming connection to root.child_1.in_1."
   - "Too many incoming connections to root.child_2.in_0."
   - "Too many outgoing connections from root.child_2.out_0."
-  - "No outgoing connections from root.child_2.out_1."
+  - "No outgoing connection from root.child_2.out_1."
+- input:
+    version: v1
+    program:
+      name: root
+      ports:
+        - direction: through
+          name: thru_0
+          size: 1
+        - direction: output
+          name: out_0
+          size: 1
+      connections:
+        - thru_0 -> out_0
+  description: "A routine with its thru port connected to its output port."
+  problems:
+    - "A through port root.thru_0 is connected via an internal connection."
+- input:
+    version: v1
+    program:
+      name: root
+      ports:
+        - direction: input
+          name: in_0
+          size: N
+        - direction: output
+          name: out_0
+          size: N
+        - direction: output
+          name: out_1
+          size: N
+      connections:
+        - in_0 -> foo.in_0
+        - foo.out_0 -> out_0
+        - foo.out_1 -> out_1
+      children:
+        - name: foo
+          ports:
+            - direction: input
+              name: in_0
+              size: N
+            - direction: output
+              name: out_0
+              size: N
+            - direction: output
+              name: out_1
+              size: N
+          connections:
+            - bar.out_0 -> out_1
+          children:
+            - name: bar
+              ports:
+                - name: out_0
+                  size: N
+                  direction: output
+  description: "Program with disconnected container ports"
+  problems:
+    - "No outgoing connection from root.foo.in_0."
+    - "No incoming connection to root.foo.out_0."
