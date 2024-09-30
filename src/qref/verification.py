@@ -181,16 +181,16 @@ def _find_disconnected_ports(routine: RoutineV1, ancestor_path: tuple[str, ...])
             if port.direction != "input":
                 requiring_outgoing.add(pname)
 
-    for port in requiring_outgoing:
-        if port not in sources_counts:
-            problems.append(f"No outgoing connection from {_prefix(port)}.")
+    for pname in requiring_outgoing:
+        if pname not in sources_counts:
+            problems.append(f"No outgoing connection from {_prefix(pname)}.")
 
-    for port in requiring_incoming:
-        if port not in target_counts:
-            problems.append(f"No incoming connection to {_prefix(port)}.")
+    for pname in requiring_incoming:
+        if pname not in target_counts:
+            problems.append(f"No incoming connection to {_prefix(pname)}.")
 
-    for port in thru_ports:
-        if port in sources_counts or port in target_counts:
-            problems.append(f"A through port {_prefix(port)} is connected via an internal connection.")
+    for pname in thru_ports:
+        if pname in sources_counts or pname in target_counts:
+            problems.append(f"A through port {_prefix(pname)} is connected via an internal connection.")
 
     return problems
