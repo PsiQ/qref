@@ -14,6 +14,7 @@
 
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from typing import Callable
 
 from .functools import accepts_all_qref_types
 from .schema_v1 import RoutineV1, SchemaV1
@@ -36,7 +37,7 @@ class TopologyVerificationOutput:
 
 
 @accepts_all_qref_types
-def verify_topology(routine: SchemaV1 | RoutineV1) -> TopologyVerificationOutput:
+def verify_topology(routine: RoutineV1) -> TopologyVerificationOutput:
     """Checks whether program has correct topology.
 
     Correct topology cannot include cycles or disconnected ports.
@@ -44,14 +45,19 @@ def verify_topology(routine: SchemaV1 | RoutineV1) -> TopologyVerificationOutput
     Args:
         routine: Routine or program to be verified.
     """
-    if isinstance(routine, SchemaV1):
-        routine = routine.program
     problems = _verify_routine_topology(routine)
     return TopologyVerificationOutput(problems)
 
 
-def _verify_routine_topology(routine: RoutineV1, ancestor_path: tuple[str] = ()) -> list[str]:
-    adjacency_list = _get_adjacency_list_from_routine(routine, path=None)
+def _make_prefixer(ancestor_path: tuple[str, ...]) -> Callable[[str], str]:
+    def _prefix(text: str) -> str:
+        return ".".join([*ancestor_path, text])
+
+    return _prefix
+
+
+def _verify_routine_topology(routine: RoutineV1, ancestor_path: tuple[str, ...] = ()) -> list[str]:
+    adjacency_list = _get_adjacency_list_from_routine(routine, path=ancestor_path)
 
     return [
         *_find_cycles(adjacency_list, ancestor_path),
@@ -64,7 +70,7 @@ def _verify_routine_topology(routine: RoutineV1, ancestor_path: tuple[str] = ())
     ]
 
 
-def _get_adjacency_list_from_routine(routine: RoutineV1, path: str | None) -> AdjacencyList:
+def _get_adjacency_list_from_routine(routine: RoutineV1, path: tuple[str, ...]) -> AdjacencyList:
     """This function creates a flat graph representing one hierarchy level of a routine.
 
     Nodes represent ports and edges represent connections (they're directed).
@@ -72,15 +78,12 @@ def _get_adjacency_list_from_routine(routine: RoutineV1, path: str | None) -> Ad
     into the children, and from the children into all the output ports.
     """
     graph = defaultdict[str, list[str]](list)
-    if path is None:
-        current_path = routine.name
-    else:
-        current_path = ".".join([path, routine.name])
+    _prefix = _make_prefixer(path + (routine.name,))
 
     # First, we go through all the connections and add them as adges to the graph
     for connection in routine.connections:
-        source = ".".join([current_path, connection.source])
-        target = ".".join([current_path, connection.target])
+        source = _prefix(connection.source)
+        target = _prefix(connection.target)
         graph[source].append(target)
 
     # Then for each children we add an extra node and set of connections
@@ -88,7 +91,7 @@ def _get_adjacency_list_from_routine(routine: RoutineV1, path: str | None) -> Ad
         input_ports: list[str] = []
         output_ports: list[str] = []
 
-        child_path = ".".join([current_path, child.name])
+        child_path = _prefix(child.name)
         for port in child.ports:
             if port.direction == "input":
                 input_ports.append(".".join([child_path, port.name]))
@@ -103,7 +106,7 @@ def _get_adjacency_list_from_routine(routine: RoutineV1, path: str | None) -> Ad
     return graph
 
 
-def _find_cycles(adjacency_list: AdjacencyList, ancestor_path: tuple[str]) -> list[str]:
+def _find_cycles(adjacency_list: AdjacencyList, ancestor_path: tuple[str, ...]) -> list[str]:
     # Note: it only returns the first detected cycle.
     for node in list(adjacency_list):
         problem = _dfs_iteration(adjacency_list, node, ancestor_path)
@@ -112,10 +115,12 @@ def _find_cycles(adjacency_list: AdjacencyList, ancestor_path: tuple[str]) -> li
     return []
 
 
-def _dfs_iteration(adjacency_list: AdjacencyList, start_node: str, ancestor_path: tuple[str]) -> list[str]:
+def _dfs_iteration(adjacency_list: AdjacencyList, start_node: str, ancestor_path: tuple[str, ...]) -> list[str]:
     to_visit: list[str] = [start_node]
     visited: list[str] = []
     predecessors: dict[str, str] = {}
+
+    _prefix = _make_prefixer(ancestor_path)
 
     while to_visit:
         node = to_visit.pop()
@@ -126,18 +131,17 @@ def _dfs_iteration(adjacency_list: AdjacencyList, start_node: str, ancestor_path
                 # Reconstruct the cycle
                 cycle = [neighbour]
                 while len(cycle) < 2 or cycle[-1] != start_node:
-                    cycle.append(".".join(ancestor_path + (predecessors[cycle[-1]],)))
+                    cycle.append(_prefix(predecessors[cycle[-1]]))
                 return [f"Cycle detected: {cycle[::-1]}"]
             if neighbour not in visited:
                 to_visit.append(neighbour)
     return []
 
 
-def _find_disconnected_ports(routine: RoutineV1, ancestor_path: tuple[str]) -> list[str]:
+def _find_disconnected_ports(routine: RoutineV1, ancestor_path: tuple[str, ...]) -> list[str]:
     problems: list[str] = []
 
-    def _prefix(name: str) -> str:
-        return ".".join(ancestor_path + (routine.name, name))
+    _prefix = _make_prefixer(ancestor_path + (routine.name,))
 
     sources_counts = Counter[str]()
     target_counts = Counter[str]()
