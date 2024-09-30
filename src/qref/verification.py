@@ -162,7 +162,7 @@ def _find_disconnected_ports(routine: RoutineV1, ancestor_path: tuple[str, ...])
 
     requiring_outgoing = set[str]()
     requiring_incoming = set[str]()
-    cannot_be_connected = set[str]()
+    thru_ports = set[str]()
 
     for port in routine.ports:
         if port.direction == "input" and routine.children:
@@ -170,7 +170,7 @@ def _find_disconnected_ports(routine: RoutineV1, ancestor_path: tuple[str, ...])
         elif port.direction == "output" and routine.children:
             requiring_incoming.add(port.name)
         elif port.direction == "through":  # Note: through ports have to be valid regardless of existence of children
-            cannot_be_connected.add(port.name)
+            thru_ports.add(port.name)
 
     for child in routine.children:
         # Directions are reversed compared to parent + through ports have to be connected on both ends
@@ -189,7 +189,7 @@ def _find_disconnected_ports(routine: RoutineV1, ancestor_path: tuple[str, ...])
         if port not in target_counts:
             problems.append(f"No incoming connection to {_prefix(port)}.")
 
-    for port in cannot_be_connected:
+    for port in thru_ports:
         if port in sources_counts or port in target_counts:
             problems.append(f"A through port {_prefix(port)} is connected via an internal connection.")
 
