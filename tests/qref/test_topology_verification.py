@@ -45,7 +45,6 @@ def test_correct_routines_pass_topology_validation(valid_program):
 def test_invalid_program_fails_to_validate_with_schema_v1(input, problems):
     verification_output = verify_topology(SchemaV1(**input))
 
-    assert not verification_output
-    assert len(problems) == len(verification_output.problems)
-    for expected_problem, problem in zip(problems, verification_output.problems):
-        assert expected_problem == problem
+    # We use sorted here, to make sure that we don't test the order in which the
+    # problems appear, as the order is only an implementation detail.
+    assert sorted(verification_output.problems) == sorted(problems)
