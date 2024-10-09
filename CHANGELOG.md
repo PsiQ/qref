@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.8.0](https://github.com/PsiQ/qref/compare/v0.7.0...v0.8.0) (2024-09-30)
+
+
+### Features
+
+* Implement support for rendering through ports ([#121](https://github.com/PsiQ/qref/issues/121)) ([b4d6bf3](https://github.com/PsiQ/qref/commit/b4d6bf3d59d74482194b4625e77d6e51ba89b302))
+
+
+### Bug Fixes
+
+* Fix topology verification ([#123](https://github.com/PsiQ/qref/issues/123)) ([f5a62af](https://github.com/PsiQ/qref/commit/f5a62af4fb9bb085bc5665798e6e59c9f433aca1))
+* Introduce helpers for creating functions consuming QREF objects ([#119](https://github.com/PsiQ/qref/issues/119)) ([c49efba](https://github.com/PsiQ/qref/commit/c49efba66faead629b936105b25d25ba339e3445))
+
+
+### Documentation
+
+* Add `through` to available port directions ([#122](https://github.com/PsiQ/qref/issues/122)) ([2ce612f](https://github.com/PsiQ/qref/commit/2ce612f409a3ab7826c17822f8b40c72257695e8))
+
 ## [0.7.0](https://github.com/PsiQ/qref/compare/v0.6.2...v0.7.0) (2024-07-25)
 
 
