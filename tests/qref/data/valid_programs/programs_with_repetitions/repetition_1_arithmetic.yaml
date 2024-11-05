@@ -1,0 +1,46 @@
+description: Program representing QFT using arithmetic sequence.
+input:
+  program:
+    children:
+    - name: QFT_iterate
+      ports:
+      - direction: input
+        name: in_0
+        size: N
+      - direction: output
+        name: out_0
+        size: N
+      children:
+      - name: core_subroutine
+        ports:
+        - direction: through
+          name: my_port
+          size: N
+        resources:
+        - name: rotations
+          type: additive
+          value: N
+      connections:
+      - source: in_0
+        target: core_subroutine.my_port
+      - source: core_subroutine.my_port
+        target: out_0
+      repetition:
+        count: N
+        sequence:
+          type: arithmetic
+          difference: 1
+    connections:
+    - source: in_0
+      target: QFT_iterate.in_0
+    - source: QFT_iterate.out_0
+      target: out_0
+    name: QFT
+    ports:
+    - direction: input
+      name: in_0
+      size: N
+    - direction: output
+      name: out_0
+      size: N
+  version: v1

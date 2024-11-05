@@ -26,7 +26,7 @@ INVALID_PYDANTIC_PROGRAMS_PATH = DATA_ROOT_PATH / "invalid_pydantic_programs.yam
 
 
 def _load_valid_examples():
-    for path in sorted(VALID_PROGRAMS_ROOT_PATH.iterdir()):
+    for path in sorted(VALID_PROGRAMS_ROOT_PATH.rglob("*.yaml")):
         with open(path) as f:
             data = yaml.safe_load(f)
             yield pytest.param(data["input"], id=data["description"])

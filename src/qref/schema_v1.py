@@ -167,27 +167,80 @@ class ParamLinkV1(BaseModel):
     model_config = ConfigDict(title="ParamLink")
 
 
+class ConstantSequenceV1(BaseModel):
+    """Description of a constant sequence in a V1 Schema.
+    In a constant sequence we repeat an element `multiplier` times in each iteration."""
+
+    type: Literal["constant"]
+    multiplier: _Value = 1
+
+
+class ArithmeticSequenceV1(BaseModel):
+    """Description of an arithmetic sequence in a V1 Schema.
+    In an arithmetic sequence we start from `initial_term` repetitions of an element,
+    and in each iteration we increase it by `difference`."""
+
+    type: Literal["arithmetic"]
+    initial_term: _Value = 0
+    difference: _Value
+
+
+class GeometricSequenceV1(BaseModel):
+    """Description of a geometric sequence in a V1 Schema.
+    In a geometric sequence we start from 1 repetition of an element,
+    and in each iteration we multiply it by `ratio`."""
+
+    type: Literal["geometric"]
+    ratio: _Value
+
+
+class ClosedFormSequenceV1(BaseModel):
+    """Description of a sequence with known closed-form for a sum or product in a V1 Schema.
+    If `sum`/`prod` are specified, they can be used to calculate these values for a given sequence.
+    Expressions for `sum`/`prod` should use `num_terms_symbol` to represent the total number of terms."""
+
+    type: Literal["closed_form"]
+    sum: _Value | None = None
+    prod: _Value | None = None
+    num_terms_symbol: str
+
+
+class CustomSequenceV1(BaseModel):
+    """Description of a custom sequence in a V1 Schema.
+    For sequences which do not fall into categories defined in other classes, one can use a custom representation.
+    It is an explicit representation of a sequence where `term_expression` defines the expression for each term
+    in the sequence and `iterator_symbol` is used to represent number of the iteration."""
+
+    type: Literal["custom"]
+    term_expression: str
+    iterator_symbol: str = "i"
+
+
+class RepetitionV1(BaseModel):
+    """Description of a repetition of a routine in V1 schema."""
+
+    count: int | str
+    sequence: ConstantSequenceV1 | ArithmeticSequenceV1 | GeometricSequenceV1 | ClosedFormSequenceV1 | CustomSequenceV1
+
+
 class RoutineV1(BaseModel):
     """Description of Routine in V1 schema.
 
     Note:
-        This is NOT a top-level object in the schema. Instead, RoutineV1 is wrapped in
-        SchemaV1.
+        This is NOT a top-level object in the schema. Instead, RoutineV1 is wrapped in SchemaV1.
     """
 
     name: _Name
-    children: Annotated[NamedList[RoutineV1], _name_sorter] = Field(default_factory=list)
+    children: Annotated[NamedList[RoutineV1], _name_sorter] = []
     type: str | None = None
-    ports: Annotated[NamedList[PortV1], _name_sorter] = Field(default_factory=list)
-    resources: Annotated[NamedList[ResourceV1], _name_sorter] = Field(default_factory=list)
-    connections: Annotated[list[Annotated[ConnectionV1, _connection_parser]], _source_sorter] = Field(
-        default_factory=list
-    )
-    input_params: list[_OptionallyMultiNamespacedName] = Field(default_factory=list)
-    local_variables: dict[str, str] = Field(default_factory=dict)
-    linked_params: Annotated[list[ParamLinkV1], _source_sorter] = Field(default_factory=list)
-    meta: dict[str, Any] = Field(default_factory=dict)
-
+    ports: Annotated[NamedList[PortV1], _name_sorter] = []
+    resources: Annotated[NamedList[ResourceV1], _name_sorter] = []
+    connections: Annotated[list[Annotated[ConnectionV1, _connection_parser]], _source_sorter] = []
+    input_params: list[_OptionallyMultiNamespacedName] = []
+    local_variables: dict[str, str] = {}
+    linked_params: Annotated[list[ParamLinkV1], _source_sorter] = []
+    repetition: RepetitionV1 | None = None
+    meta: dict[str, Any] = {}
     model_config = ConfigDict(title="Routine", validate_assignment=True)
 
     def __init__(self, **data: Any):
