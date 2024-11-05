@@ -24,7 +24,6 @@ from pydantic import (
     BaseModel,
     BeforeValidator,
     ConfigDict,
-    Field,
     StringConstraints,
     model_validator,
 )
@@ -231,7 +230,7 @@ class RoutineV1(BaseModel):
     """
 
     name: _Name
-    children: Annotated[NamedList[RoutineV1], _name_sorter] = NamedList[RoutineV1]()
+    children: Annotated[NamedList[RoutineV1], _name_sorter] = NamedList["RoutineV1"]()
     type: str | None = None
     ports: Annotated[NamedList[PortV1], _name_sorter] = NamedList[PortV1]()
     resources: Annotated[NamedList[ResourceV1], _name_sorter] = NamedList[ResourceV1]()
