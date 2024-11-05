@@ -231,10 +231,10 @@ class RoutineV1(BaseModel):
     """
 
     name: _Name
-    children: Annotated[NamedList[RoutineV1], _name_sorter] = []
+    children: Annotated[NamedList[RoutineV1], _name_sorter] = NamedList[RoutineV1]()
     type: str | None = None
-    ports: Annotated[NamedList[PortV1], _name_sorter] = []
-    resources: Annotated[NamedList[ResourceV1], _name_sorter] = []
+    ports: Annotated[NamedList[PortV1], _name_sorter] = NamedList[PortV1]()
+    resources: Annotated[NamedList[ResourceV1], _name_sorter] = NamedList[ResourceV1]()
     connections: Annotated[list[Annotated[ConnectionV1, _connection_parser]], _source_sorter] = []
     input_params: list[_OptionallyMultiNamespacedName] = []
     local_variables: dict[str, str] = {}
