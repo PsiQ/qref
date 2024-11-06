@@ -153,3 +153,45 @@ beginning looks as follows:
     ```yaml
     --8<-- "basic_program_concise.yaml"
     ```
+
+
+### Repetitions
+
+On top of the basic fileds listed above, one can also write a QREF routine which contains repetitions.
+
+This can be added with `repetition` field:
+
+```yaml
+repetition:
+  count: ceil(1/eps)
+  sequence:
+    type: constant
+    multiplier: 1
+```
+
+`repetition` consists of two parts:
+
+- `count` – defines how many times the child of the this routine should be repeated.
+- `sequence` – defines how the costs for the repetition will be aggregated. Each `sequence` has a field `type` which defines the type of the sequence. Depending on the type there are extra fields, summarized in the table below.
+
+
+There are 5 different sequences that one can currently use in QREF:
+
+
+| <div style="width:7em">Sequence type</div> | <div style="width:8em">Additional fields</div> | Description | Example |
+|-------|-------|-------|-------|
+| `constant`| `multiplier` | In each iteration child is repeated `multiplier` number of times. | Trotterization |
+| `arithmetic`| `difference`, `initial_term` | Iteration starts from `initial_term` repetitions of a child and then we increase the of repetitions by `difference` in every iteration. | QFT | 
+| `geometric` | `ratio` | In each iteration number of repetitions is multiplied by `ratio`, starts for 1 repetition in the first iteartion. | QPE |
+| `closed_form` | `sum`, `prod`, `num_terms_symbol` | This can be used for cases, where we know the closed-form expression for the total cost of the routine given the number of repetitions is defined `num_terms_symbol`. `sum` is an expression for additive resources and `prod` is for multiplicative. | Any |
+| `custom` | `term_expression`, `iterator_symbol` | This can be used in case where we don't know the formula for closed form, but we do know the formula for each term, which is defined using `term_expression`, and we use `iterator_symbol` to denote the iterator. | Any |
+
+
+This representation abstracts out certain implementation details. Consider implementation of QPE using geometric sequence below. The child `U` of routine `Evolution` has two ports: `result` and `psi`, the with sizes `bits_of_precision` and  `N`. Even though in the executable implementation each next controlled `U^2^i` only acts on one control qubit from the `result` register, there's currently no way of expressing it in QREF.
+
+=== "YAML"
+
+    ```yaml
+    --8<-- "qpe.yaml"
+    ```
+

@@ -24,6 +24,7 @@ from pydantic import (
     BaseModel,
     BeforeValidator,
     ConfigDict,
+    Field,
     StringConstraints,
     model_validator,
 )
@@ -230,10 +231,10 @@ class RoutineV1(BaseModel):
     """
 
     name: _Name
-    children: Annotated[NamedList[RoutineV1], _name_sorter] = NamedList["RoutineV1"]()
+    children: Annotated[NamedList[RoutineV1], _name_sorter] = Field(default_factory=NamedList)
     type: str | None = None
-    ports: Annotated[NamedList[PortV1], _name_sorter] = NamedList[PortV1]()
-    resources: Annotated[NamedList[ResourceV1], _name_sorter] = NamedList[ResourceV1]()
+    ports: Annotated[NamedList[PortV1], _name_sorter] = Field(default_factory=NamedList)
+    resources: Annotated[NamedList[ResourceV1], _name_sorter] = Field(default_factory=NamedList)
     connections: Annotated[list[Annotated[ConnectionV1, _connection_parser]], _source_sorter] = []
     input_params: list[_OptionallyMultiNamespacedName] = []
     local_variables: dict[str, str] = {}
