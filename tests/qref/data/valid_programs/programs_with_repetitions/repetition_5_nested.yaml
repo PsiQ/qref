@@ -1,0 +1,59 @@
+description: Program representing a routine with nested repetitions
+input:
+  program:
+    children:
+    - name: a
+      children:
+      - name: b
+        ports:
+        - direction: through
+          name: thru_0
+          size: N
+        resources:
+        - name: y
+          type: additive
+          value: N
+        - name: z
+          type: multiplicative
+          value: N
+        type: null
+      ports:
+      - direction: input
+        name: in_0
+        size: N
+      - direction: output
+        name: out_0
+        size: null
+      connections:
+      - source: b.thru_0
+        target: out_0
+      - source: in_0
+        target: b.thru_0
+      repetition:
+        count: N
+        sequence:
+          type: arithmetic
+          difference: 2
+          initial_term: 1
+      type: null
+    connections:
+    - source: a.out_0
+      target: out_0
+    - source: in_0
+      target: a.in_0
+    name: root
+    ports:
+    - direction: input
+      name: in_0
+      size: N
+    - direction: output
+      name: out_0
+      size: null
+    repetition:
+      count: 10
+      sequence:
+        type: constant
+        multiplier: 1
+    type: null
+  version: v1
+  

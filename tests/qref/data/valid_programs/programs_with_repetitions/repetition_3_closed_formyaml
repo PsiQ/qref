@@ -1,0 +1,85 @@
+description: Program representing QPE using closed form sequence.
+input:
+  program:
+    children:
+    - name: Hadamards
+      ports:
+      - direction: through
+        name: register
+        size: N
+    - name: Evolution
+      ports:
+      - direction: input
+        name: result_in
+        size: N
+      - direction: output
+        name: result_out
+        size: N
+      - direction: input
+        name: psi_in
+        size: M
+      - direction: output
+        name: psi_out
+        size: M
+      children:
+      - name: U
+        ports:
+        - direction: through
+          name: result
+          size: N
+        - direction: through
+          name: psi
+          size: N
+        resources:
+        - name: T_gates
+          type: additive
+          value: N**2
+      connections:
+      - source: result_in
+        target: U.result
+      - source: U.result
+        target: result_out
+      - source: psi_in
+        target: U.psi
+      - source: U.psi
+        target: psi_out
+      repetition:
+        count: N
+        sequence:
+          type: closed_form
+          sum: "(2 ** (X + 1) - 1)"
+          num_terms_symbol: X
+    - name: Inverse_QFT
+      ports:
+      - direction: through
+        name: register
+        size: N
+    connections:
+    - source: result_in
+      target: Hadamards.register
+    - source: Hadamards.register
+      target: Evolution.result_in
+    - source: Evolution.result_out
+      target: Inverse_QFT.register
+    - source: Inverse_QFT.register
+      target: result_out
+    - source: psi_in
+      target: Evolution.psi_in
+    - source: Evolution.psi_out
+      target: psi_out
+    name: QPE
+    ports:
+    - direction: input
+      name: result_in
+      size: ceil(log2(1/eps))
+    - direction: output
+      name: result_out
+      size: ceil(log2(1/eps))
+    - direction: input
+      name: psi_in
+      size: M
+    - direction: output
+      name: psi_out
+      size: M
+
+  version: v1

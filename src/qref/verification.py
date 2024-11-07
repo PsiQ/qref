@@ -120,8 +120,6 @@ def _dfs_iteration(adjacency_list: AdjacencyList, start_node: str, ancestor_path
     visited: list[str] = []
     predecessors: dict[str, str] = {}
 
-    _prefix = _make_prefixer(ancestor_path)
-
     while to_visit:
         node = to_visit.pop()
         visited.append(node)
@@ -131,7 +129,7 @@ def _dfs_iteration(adjacency_list: AdjacencyList, start_node: str, ancestor_path
                 # Reconstruct the cycle
                 cycle = [neighbour]
                 while len(cycle) < 2 or cycle[-1] != start_node:
-                    cycle.append(_prefix(predecessors[cycle[-1]]))
+                    cycle.append(predecessors[cycle[-1]])
                 return [f"Cycle detected: {cycle[::-1]}"]
             if neighbour not in visited:
                 to_visit.append(neighbour)

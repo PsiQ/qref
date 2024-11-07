@@ -1,0 +1,74 @@
+description: Program with one subroutine repeated multiple times
+input:
+  program:
+    children:
+    - name: A
+      ports:
+      - direction: through
+        name: port_A
+        size: N
+    - name: B
+      input_params:
+      - eps
+      linked_params:
+      - source: eps
+        targets:
+        - core_subroutine.eps
+      ports:
+      - direction: input
+        name: port_B_in
+        size: N
+      - direction: output
+        name: port_B_out
+        size: N
+      children:
+      - name: core_subroutine
+        input_params:
+        - eps
+        ports:
+        - direction: through
+          name: my_port
+          size: N
+        resources:
+        - name: cost
+          type: additive
+          value: ceil(1/eps)/2
+      connections:
+      - source: port_B_in
+        target: core_subroutine.my_port
+      - source: core_subroutine.my_port
+        target: port_B_out
+      repetition:
+        count: ceil(1/eps)
+        sequence:
+          type: constant
+          multiplier: 1
+    - name: C
+      ports:
+      - direction: through
+        name: port_C
+        size: N
+    connections:
+    - source: in_0
+      target: A.port_A
+    - source: A.port_A
+      target: B.port_B_in
+    - source: B.port_B_out
+      target: C.port_C
+    - source: C.port_C
+      target: out_0
+    input_params:
+    - N
+    linked_params:
+    - source: N
+      targets:
+      - B.eps
+    name: root
+    ports:
+    - direction: input
+      name: in_0
+      size: N
+    - direction: output
+      name: out_0
+      size: N
+  version: v1
