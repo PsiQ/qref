@@ -191,7 +191,7 @@ class ArithmeticSequenceV1(BaseModel):
 
 class GeometricSequenceV1(BaseModel):
     """Description of a geometric sequence in a V1 Schema.
-    
+
     In a geometric sequence we start from 1 repetition of an element,
     and in each iteration we multiply it by `ratio`.
     """
