@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/PsiQ/qref/compare/v0.8.0...v0.9.0) (2024-11-07)
+
+
+### Features
+
+* add repeated structures ([#124](https://github.com/PsiQ/qref/issues/124)) ([a3ead6c](https://github.com/PsiQ/qref/commit/a3ead6c0cfd16c03c1527e234eed81dcb2ba31f6))
+
 ## [0.8.0](https://github.com/PsiQ/qref/compare/v0.7.0...v0.8.0) (2024-09-30)
 
 
