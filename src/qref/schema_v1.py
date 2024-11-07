@@ -169,7 +169,9 @@ class ParamLinkV1(BaseModel):
 
 class ConstantSequenceV1(BaseModel):
     """Description of a constant sequence in a V1 Schema.
-    In a constant sequence we repeat an element `multiplier` times in each iteration."""
+
+    In a constant sequence we repeat an element `multiplier` times in each iteration.
+    """
 
     type: Literal["constant"]
     multiplier: _Value = 1
@@ -177,8 +179,10 @@ class ConstantSequenceV1(BaseModel):
 
 class ArithmeticSequenceV1(BaseModel):
     """Description of an arithmetic sequence in a V1 Schema.
+
     In an arithmetic sequence we start from `initial_term` repetitions of an element,
-    and in each iteration we increase it by `difference`."""
+    and in each iteration we increase it by `difference`.
+    """
 
     type: Literal["arithmetic"]
     initial_term: _Value = 0
@@ -187,8 +191,10 @@ class ArithmeticSequenceV1(BaseModel):
 
 class GeometricSequenceV1(BaseModel):
     """Description of a geometric sequence in a V1 Schema.
+    
     In a geometric sequence we start from 1 repetition of an element,
-    and in each iteration we multiply it by `ratio`."""
+    and in each iteration we multiply it by `ratio`.
+    """
 
     type: Literal["geometric"]
     ratio: _Value
@@ -196,8 +202,10 @@ class GeometricSequenceV1(BaseModel):
 
 class ClosedFormSequenceV1(BaseModel):
     """Description of a sequence with known closed-form for a sum or product in a V1 Schema.
+
     If `sum`/`prod` are specified, they can be used to calculate these values for a given sequence.
-    Expressions for `sum`/`prod` should use `num_terms_symbol` to represent the total number of terms."""
+    Expressions for `sum`/`prod` should use `num_terms_symbol` to represent the total number of terms.
+    """
 
     type: Literal["closed_form"]
     sum: _Value | None = None
@@ -207,9 +215,11 @@ class ClosedFormSequenceV1(BaseModel):
 
 class CustomSequenceV1(BaseModel):
     """Description of a custom sequence in a V1 Schema.
+
     For sequences which do not fall into categories defined in other classes, one can use a custom representation.
     It is an explicit representation of a sequence where `term_expression` defines the expression for each term
-    in the sequence and `iterator_symbol` is used to represent number of the iteration."""
+    in the sequence and `iterator_symbol` is used to represent number of the iteration.
+    """
 
     type: Literal["custom"]
     term_expression: str
