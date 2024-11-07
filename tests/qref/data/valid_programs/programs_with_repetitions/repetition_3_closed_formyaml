@@ -47,7 +47,7 @@ input:
         count: N
         sequence:
           type: closed_form
-          sum: "(2 ^ (X + 1) - 1)"
+          sum: "(2 ** (X + 1) - 1)"
           num_terms_symbol: X
     - name: Inverse_QFT
       ports:
