@@ -72,7 +72,6 @@ REPETITION_NODE_KWARGS = {
     "color": "#097969",  # Green border color
     "fontsize": "10",  # Smaller font size than the rest of the graph
     "shape": "record",
-
 }
 
 # Additional attributes of subgraphs of ports (ports of the same direction
@@ -148,14 +147,14 @@ def _add_nonleaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
                 _format_node_name(connection.source, routine, full_path),
                 _format_node_name(connection.target, routine, full_path),
             )
-        
+
         if routine.repetition is not None:
             label = "Repeated subroutine"
             repetition_type = routine.repetition.sequence.type
-            count = routine.repetition.count            
-            node_structure = f'{label} | {{type:   {repetition_type}}} | {{count:  {count}}}'
+            count = routine.repetition.count
+            node_structure = f"{label} | {{type:   {repetition_type}}} | {{count:  {count}}}"
             # Similarly to through ports, we add ghost nodes and edges to center repetition
-            cname = f'{full_path}_repetition'
+            cname = f"{full_path}_repetition"
             dummy_out = f"{cname}_out"
             dummy_in = f"{cname}_in"
             cluster.node(dummy_in, label="", style="invis")
@@ -164,7 +163,6 @@ def _add_nonleaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
             cluster.edge(cname, dummy_out, style="invis")
 
             cluster.node(cname, node_structure, **REPETITION_NODE_KWARGS)
-
 
 
 def _ports_row(ports) -> str:
