@@ -66,6 +66,15 @@ PORT_NODE_KWARGS = {
     "shape": "circle",
 }
 
+# Keyword args passed to dag.node for drawing nodes for describing repetitions
+REPETITION_NODE_KWARGS = {
+    "style": "bold",  # Bold border
+    "color": "#097969",  # Green border color
+    "fontsize": "10",  # Smaller font size than the rest of the graph
+    "shape": "record",
+
+}
+
 # Additional attributes of subgraphs of ports (ports of the same direction
 # are grouped into such subgraphs)
 PORT_GROUP_ATTRS = {"rank": "same"}  # Place all ports in the group in the same column
@@ -121,8 +130,7 @@ def _add_nonleaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
         _add_nonleaf_ports(output_ports, cluster, full_path, "outputs")
         _add_nonleaf_ports(through_ports, cluster, full_path, "through")
 
-        # We're adding ghost nodes and edges to position the through ports
-        # in the middle.
+        # We're adding ghost nodes and edges to position the through ports in the middle
         for port in through_ports:
             dummy_out = f'"{full_path}.{port.name}_out"'
             dummy_in = f'"{full_path}.{port.name}_in"'
@@ -140,6 +148,23 @@ def _add_nonleaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
                 _format_node_name(connection.source, routine, full_path),
                 _format_node_name(connection.target, routine, full_path),
             )
+        
+        if routine.repetition is not None:
+            label = "Repeated subroutine"
+            repetition_type = routine.repetition.sequence.type
+            count = routine.repetition.count            
+            node_structure = f'{label} | {{type:   {repetition_type}}} | {{count:  {count}}}'
+            # Similarly to through ports, we add ghost nodes and edges to center repetition
+            cname = f'{full_path}_repetition'
+            dummy_out = f"{cname}_out"
+            dummy_in = f"{cname}_in"
+            cluster.node(dummy_in, label="", style="invis")
+            cluster.node(dummy_out, label="", style="invis")
+            cluster.edge(dummy_in, cname, style="invis")
+            cluster.edge(cname, dummy_out, style="invis")
+
+            cluster.node(cname, node_structure, **REPETITION_NODE_KWARGS)
+
 
 
 def _ports_row(ports) -> str:
