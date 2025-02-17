@@ -67,15 +67,8 @@ def test_validation_error_includes_name_of_the_missed_port():
 def test_chronology_of_children_is_preserved_when_constructing_model_instances():
     # We used to sort children by name before we decided chronology is important. This test ensures that
     # we haven't unintentionally reintroduced this sorting again.
-    input = {
-        "version": "v1",
-        "program": {
-            "name": "test",
-            "children": [{"name": "c"}, {"name": "b"}, {"name": "d"}]
-        }
-    }
+    input = {"version": "v1", "program": {"name": "test", "children": [{"name": "c"}, {"name": "b"}, {"name": "d"}]}}
 
     qref_obj = SchemaV1.model_validate(input)
 
     assert [child.name for child in qref_obj.program.children] == ["c", "b", "d"]
-
