@@ -241,7 +241,7 @@ class RoutineV1(BaseModel):
     """
 
     name: _Name
-    children: Annotated[NamedList[RoutineV1], _name_sorter] = Field(default_factory=NamedList)
+    children: NamedList[RoutineV1] = Field(default_factory=NamedList)
     type: str | None = None
     ports: Annotated[NamedList[PortV1], _name_sorter] = Field(default_factory=NamedList)
     resources: Annotated[NamedList[ResourceV1], _name_sorter] = Field(default_factory=NamedList)
