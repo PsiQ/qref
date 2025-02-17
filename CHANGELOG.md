@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.0](https://github.com/PsiQ/qref/compare/v0.9.0...v0.10.0) (2025-02-17)
+
+
+### Features
+
+* add visualization for repeated routines ([#128](https://github.com/PsiQ/qref/issues/128)) ([31b286c](https://github.com/PsiQ/qref/commit/31b286c80844fe22673e8ca7602e222d0853a1a0))
+* Preserve chronology of children when validating QREF ([#131](https://github.com/PsiQ/qref/issues/131)) ([3869933](https://github.com/PsiQ/qref/commit/38699338f2b0bb47ad050bb66d5edf3ada58660f))
+
 ## [0.9.0](https://github.com/PsiQ/qref/compare/v0.8.0...v0.9.0) (2024-11-07)
 
 
