@@ -9,7 +9,7 @@ should have an unique name. This choice affects:
 - Children of a `Routine`.
 - Ports of a `Routine`.
 
-For instance, why did we chose to represent ports like this:
+For instance, why did we choose to represent ports like this:
 
 ```yaml
 ports:
@@ -24,9 +24,9 @@ ports:
   in_0: {"direction": "input", "size": 2}
   out_0: {"direction": "output", "size": "N"}
 ```
-?
+? There are two answers to this question.
 
-The answer is purely pragmatic. On the one hand, using mappings
+The first answer is purely pragmatic. On the one hand, using mappings
 instead of lists would guarantee uniqueness of names of ports
 and children. But, on the other hand, it would give a false
 sense of security. To see why, consider the following example
@@ -91,6 +91,18 @@ data format. Different users can use different parsers and we
 want to make sure everyone gets consistent results no matter
 what parsing library they use.
 
+The second reason concerns only `children` field and is much more nuanced,
+but essentially boils down to the fact that lists are naturally better suited
+for storing ordered information. While QREF format itself does not enforce
+ordering on the input data, there might be algorithms that
+utilize particular ordering of subroutines. Therefore, it is
+essential that at least the order of children is expressed in a list.
+
+!!! note
+
+    When constructing instances of QREF pydantic models, lists of ports and
+    resources are sorted alphabetically by name. However, initial order
+    of children is always preserved.
 
 ## Why isn't routine a top level object?
 
@@ -102,7 +114,7 @@ version: v1
 program:
   name: my_program
   children:
-    # ... 
+    # ...
 ```
 You might wonder why wouldn't we just make the program a
 top-level object, or, in other words, why don't QREF
