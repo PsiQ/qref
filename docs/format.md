@@ -1,8 +1,8 @@
 # Data format
 
 ## Introduction
-In QREF, algorithms are described as programs comprising hierarchical, directed
-acyclic graph (or a _hierarchical DAG_) of subroutines. Let's break down
+In QREF algorithms are described as a hierarchical, directed, and
+acyclic graph (or _hierarchical DAG_) of subroutines. Let's break down
 what this means:
 
 - *Hierarchical* means that routines can be nested.
@@ -11,39 +11,38 @@ what this means:
 - *Acyclic* means that traversing the graph along its edges (respecting their direction)
   will never lead to visiting the same node twice.
 
-Besides specifying the connectivity between routines in the algorithms, QREF
-also specifies how to store information relevant to resource estimation such as
+Besides specifying the connectivity between routines in the algorithm, QREF
+also specifies how to store information relevant to resource estimation. This extends to
 known and unknown resources, parameters that might affect them and how the parameters
 propagate in the algorithms graph.
 
-Before describing the format in detail, let's see how QREF would handle a simple, toy program.
+Before describing the format in detail, let's see how QREF would handle a simple algorithm.
 
 ## Basic example
 
-Consider a hypothetical program as depicted in the following circuit.
+Consider a hypothetical algorithm as depicted in the following circuit.
 
 ![example_circuit](images/basic_circuit.svg){width="500"}
 
-Let's forget for a while that the depicted algorithm doesn't make much sense.
 We can see that the circuit comprises two subroutines:
 
 - `subroutine_1` operating on a single-qubit register.
 - `subroutine_2` operating on a two-qubit register.
 
 We also labelled inputs to the subroutines as `in_0` and `in_1`, and the whole
-output of our program (i.e. combined outputs of both subroutines) as `out`.
+output of our circuit (i.e. combined outputs of both subroutines) as `out`.
 
-Representing such a circuit as a graph is straightforward, it might look like this:
+Representing this circuit as a graph is straightforward, it might look like this:
 
 ![example_routine](images/basic_program.svg)
 
 The graph contains both subroutines from the original circuit,
 as well as an artificially introduced `merge` operation used to combine outputs
-from the subprograms into one final outputs.
+from the subroutines into one final output.
 
-Now that we have our graph, let's see how it can be represented in QREF format.
-As QREF is built on top of JSON we can write QREF
-files in either JSON or YAML. For our example, those might look as follows:
+Now that we have our graph, let's see how it can be represented in QREF.
+As QREF is built on top of JSON we can write our algorithms
+(or programs) in either JSON or YAML. For our example, those might look as follows:
 
 === "YAML"
 
@@ -60,14 +59,15 @@ files in either JSON or YAML. For our example, those might look as follows:
 The top-level object has **two mandatory properties**:
 
 - `version`: Set to `v1` (which is the only version so far)
-- `program`: This contains the description of our program.
+- `program`: This contains the description of our algorithm.
 
 So what do we have in a `program` object?
 
 - `name`: Each program requires a name, here set to the string `my_program`.
 - `ports`: A collection of ports. They roughly correspond to quantum registers.
 - `children`: A list of children, or subroutines, of the program.
-- `connections`: A list defining edges of our graph. Intuitively, the connections property defines how the subroutines of a program interact.
+- `connections`: A list defining edges of our graph. Intuitively, 
+the connections property defines how the subroutines of a program interact.
 
 
 Let's explore some of these properties in more detail!
@@ -79,10 +79,12 @@ Here we highlight the first input port of our top level program, `my_program`:
 {direction: input, name: in_0, size: 1}
 ```
 
-Like most components in QREF ports require names, and these should be unique for the ports of a given program (or subroutine). Each port also has direction, which can be either `input`, `output` or `through` (for ports serving as
+Like most components in QREF ports require names, and these should be unique for 
+the ports of a given program (or subroutine). Each port also has direction, 
+which can be either `input`, `output` or `through` (for ports serving as
 both input and output). Finally, each port has a _size_.
-In our simple scenario, all sizes are positive integers. However, QREF
-is not limited to them, and size of a port can be either:
+In our simple scenario, all sizes are positive integers. 
+However, entries to the size field can take on any of the following formats:
 
 - A positive integer.
 - A symbol or symbolic expression (e.g. `N` or `2L + 1`)
@@ -92,7 +94,7 @@ is not limited to them, and size of a port can be either:
 ### Children
 
 The `children` list comprises all subroutines of the program. Each entry has the
-same structure as the program itself (such the schema of the `program`
+same structure as the program itself (such that the schema of `program`
 is recursive). In particular, each child should have a name (unique in the scope
 of their immediate parent) and some ports. They can also have connections, and their 
 own children.
@@ -168,7 +170,7 @@ repetition:
 - `sequence` – defines how the costs for the repetition will be aggregated. Each `sequence` has a field `type` which defines the type of the sequence. Depending on the type there are extra fields, summarized in the table below.
 
 
-There are 5 different sequences that one can currently use in QREF:
+There are 5 different sequences currently implemented in QREF:
 
 
 | <div style="width:7em">Sequence type</div> | <div style="width:8em">Additional fields</div> | Description | Example |
