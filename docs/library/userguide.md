@@ -85,8 +85,9 @@ if not verification_output:
 
 ### Rendering QREF files using `qref-render` (experimental)
 
-:warning: _This feature is considered experimental and may occassionally produce
-incorrect results._
+!!! Warning
+    This feature is considered experimental and may occassionally produce
+    incorrect results.
 
 
 QREF comes with a CLI tool for rendering hierarchical graphs of quantum
