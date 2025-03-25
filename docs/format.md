@@ -1,8 +1,7 @@
 # Data format
 
 ## Introduction
-In QREF algorithms are described as a hierarchical, directed, and
-acyclic graph (or _hierarchical DAG_) of subroutines. Let's break down
+In QREF, algorithms are described as a graph of subroutines. These graphs are by design hierarchical, directed, and acyclical. Let's break down
 what this means:
 
 - *Hierarchical* means that routines can be nested.
