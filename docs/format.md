@@ -66,7 +66,7 @@ So what do we have in a `program` object?
 - `ports`: A collection of ports. They roughly correspond to quantum registers.
 - `children`: A list of children, or subroutines, of the program.
 - `connections`: A list defining edges of our graph. Intuitively, 
-the connections property defines how the subroutines of a program interact.
+the connections property defines the flow of data between subroutines.
 
 
 Let's explore some of these properties in more detail!
@@ -151,7 +151,7 @@ beginning looks as follows:
 
 ### Repetitions
 
-On top of the basic fields listed above, programs and subroutines can also be repeated.
+On top of the basic fields listed above, subroutines can also be repeated.
 
 These can be added with `repetition` field:
 

@@ -10,7 +10,7 @@ quantum algorithms. Built on top of JSON, it has been optimized for the purpose 
     ---
 
     QREF's data format is built on top of JSON, which makes it easy to
-    write and read. Click here to learn how to write a QREF program.
+    write and read.
 
     [:octicons-arrow-right-24: Learn more](format.md)
 
