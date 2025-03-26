@@ -3,13 +3,13 @@
 ## Using lists instead of mappings
 
 One of the most controversial choices we have made in QREF is the choice of
-using lists instead of mappings (a.k.a. dictionaries) for objects that
+using lists instead of mappings (Python dictionaries) for objects that
 should have an unique name. This choice affects:
 
 - Children of a `Routine`.
 - Ports of a `Routine`.
 
-For instance, why did we choose to represent ports like this:
+For instance, you may ask why we chose to represent ports like this:
 
 ```yaml
 ports:
@@ -24,13 +24,12 @@ ports:
   in_0: {"direction": "input", "size": 2}
   out_0: {"direction": "output", "size": "N"}
 ```
-? There are two answers to this question.
+There are two answers to this question.
 
-The first answer is purely pragmatic. On the one hand, using mappings
+The first answer is purely pragmatic. On the one hand using mappings
 instead of lists would guarantee uniqueness of names of ports
-and children. But, on the other hand, it would give a false
-sense of security. To see why, consider the following example
-Python code, which loads an incorrect definition of ports:
+and children. However it would also give a false
+sense of security. To see why consider the following example, which loads an incorrect definition of ports:
 
 ```python
 import yaml
@@ -45,7 +44,7 @@ print(yaml.safe_load(data))
 ```
 
 If you are new to parsing YAML (or JSON) in Python you might be
-surprised that the code runs at all - after all shouldn't keys
+surprised that the code runs - after all shouldn't keys
 in YAML mappings be unique? Well they should, but most parsers
 will just load the last key if the duplicates are present. The
 code above prints:
@@ -91,11 +90,11 @@ data format. Different users can use different parsers and we
 want to make sure everyone gets consistent results no matter
 what parsing library they use.
 
-The second reason concerns only `children` field and is much more nuanced,
+The second reason concerns the `children` field and is much more nuanced,
 but essentially boils down to the fact that lists are naturally better suited
-for storing ordered information. While QREF format itself does not enforce
+for storing ordered information. While QREF itself does not enforce
 ordering on the input data, there might be algorithms that
-utilize particular ordering of subroutines. Therefore, it is
+utilize a particular ordering of subroutines. Therefore, it is
 essential that at least the order of children is expressed in a list.
 
 !!! note
@@ -104,10 +103,10 @@ essential that at least the order of children is expressed in a list.
     resources are sorted alphabetically by name. However, initial order
     of children is always preserved.
 
-## Why isn't routine a top level object?
+## Why isn't the program a top level object?
 
 The actual program you are representing in QREF is stored
-as `program` property of a top-level schema object, i.e.
+as the `program` property of a top-level schema object, i.e.
 
 ```yaml
 version: v1

@@ -1,7 +1,7 @@
 # QREF
 
-Quantum Resource Estimation Format (QREF) is an open format for representing
-quantum algorithms, optimized for usage in quantum resource estimation (QRE).
+The Quantum Resource Estimation Format (QREF) is an open format for representing
+quantum algorithms. Built on top of JSON, it has been optimized for the purpose of quantum resource estimation.
 
 <div class="grid cards" markdown>
 
