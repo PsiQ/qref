@@ -71,7 +71,7 @@
     version: v1
   description: Program contains cycles
   problems:
-  - "Cycle detected: ['root.child_1.out_0', 'root.child_2.in_0', 'root.child_2', 'root.child_2.out_1', 'root.child_3.in_1', 'root.child_3', 'root.child_3.out_1', 'root.child_1.in_1', 'root.child_1', 'root.child_1.out_0']"
+  - "Cycle detected: ['root.child_2.in_0', 'root.child_2', 'root.child_2.out_0', 'root.child_3.in_0', 'root.child_3', 'root.child_3.out_1', 'root.child_1.in_1', 'root.child_1', 'root.child_1.out_0', 'root.child_2.in_0']"
 - input:
     program:
       children:

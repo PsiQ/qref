@@ -14,12 +14,13 @@
 
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from graphlib import CycleError, TopologicalSorter
 from typing import Callable
 
 from .functools import accepts_all_qref_types
 from .schema_v1 import RoutineV1
 
-AdjacencyList = dict[str, list[str]]
+Graph = dict[str, list[str]]
 
 
 @dataclass
@@ -57,10 +58,8 @@ def _make_prefixer(ancestor_path: tuple[str, ...]) -> Callable[[str], str]:
 
 
 def _verify_routine_topology(routine: RoutineV1, ancestor_path: tuple[str, ...] = ()) -> list[str]:
-    adjacency_list = _get_adjacency_list_from_routine(routine, path=ancestor_path)
-
     return [
-        *_find_cycles(adjacency_list, ancestor_path),
+        *_find_cycles(routine, ancestor_path),
         *_find_disconnected_ports(routine, ancestor_path),
         *[
             problem
@@ -70,8 +69,8 @@ def _verify_routine_topology(routine: RoutineV1, ancestor_path: tuple[str, ...] 
     ]
 
 
-def _get_adjacency_list_from_routine(routine: RoutineV1, path: tuple[str, ...]) -> AdjacencyList:
-    """This function creates a flat graph representing one hierarchy level of a routine.
+def _graph_from_routine(routine: RoutineV1, path: tuple[str, ...]) -> Graph:
+    """Convert routine to a graph in a format expected by graphlib.
 
     Nodes represent ports and edges represent connections (they're directed).
     Additionaly, we add node for each children and edges coming from all the input ports
@@ -84,7 +83,7 @@ def _get_adjacency_list_from_routine(routine: RoutineV1, path: tuple[str, ...]) 
     for connection in routine.connections:
         source = _prefix(connection.source)
         target = _prefix(connection.target)
-        graph[source].append(target)
+        graph[target].append(source)
 
     # Then for each children we add an extra node and set of connections
     for child in routine.children:
@@ -99,40 +98,21 @@ def _get_adjacency_list_from_routine(routine: RoutineV1, path: tuple[str, ...]) 
                 output_ports.append(".".join([child_path, port.name]))
 
         for input_port in input_ports:
-            graph[input_port].append(child_path)
+            graph[child_path].append(input_port)
 
-        graph[child_path] += output_ports
+        for output_port in output_ports:
+            graph[output_port].append(child_path)
 
     return graph
 
 
-def _find_cycles(adjacency_list: AdjacencyList, ancestor_path: tuple[str, ...]) -> list[str]:
-    # Note: it only returns the first detected cycle.
-    for node in list(adjacency_list):
-        problem = _dfs_iteration(adjacency_list, node, ancestor_path)
-        if problem:
-            return problem
-    return []
+def _find_cycles(routine: RoutineV1, ancestor_path: tuple[str, ...]) -> list[str]:
+    sorter = TopologicalSorter(_graph_from_routine(routine, ancestor_path))
+    try:
+        _ = tuple(sorter.static_order())  # static_order is a generator, tuple() triggers actual iteration
+    except CycleError as e:
+        return [f"Cycle detected: {e.args[1]}"]
 
-
-def _dfs_iteration(adjacency_list: AdjacencyList, start_node: str, ancestor_path: tuple[str, ...]) -> list[str]:
-    to_visit: list[str] = [start_node]
-    visited: list[str] = []
-    predecessors: dict[str, str] = {}
-
-    while to_visit:
-        node = to_visit.pop()
-        visited.append(node)
-        for neighbour in adjacency_list[node]:
-            predecessors[neighbour] = node
-            if neighbour == start_node:
-                # Reconstruct the cycle
-                cycle = [neighbour]
-                while len(cycle) < 2 or cycle[-1] != start_node:
-                    cycle.append(predecessors[cycle[-1]])
-                return [f"Cycle detected: {cycle[::-1]}"]
-            if neighbour not in visited:
-                to_visit.append(neighbour)
     return []
 
 
