@@ -50,6 +50,7 @@ def test_invalid_program_fails_to_validate_with_schema_v1(input, problems):
     assert sorted(verification_output.problems) == sorted(problems)
 
 
+@pytest.mark.timeout(10)
 def test_topology_verification_of_a_large_routine_completes_in_acceptable_time():
     N_CHILDREN = 10000
 
