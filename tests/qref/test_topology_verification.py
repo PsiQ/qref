@@ -48,3 +48,29 @@ def test_invalid_program_fails_to_validate_with_schema_v1(input, problems):
     # We use sorted here, to make sure that we don't test the order in which the
     # problems appear, as the order is only an implementation detail.
     assert sorted(verification_output.problems) == sorted(problems)
+
+
+def test_topology_verification_of_a_large_routine_completes_in_acceptable_time():
+    N_CHILDREN = 10000
+
+    qref_obj = {
+        "version": "v1",
+        "program": {
+            "name": "test",
+            "ports": [
+                {"name": "in_0", "direction": "input", "size": 1},
+                {"name": "out_0", "direction": "output", "size": 1},
+            ],
+            "children": [
+                {"name": f"child_{i}", "ports": [{"name": "thru_0", "direction": "through", "size": 1}]}
+                for i in range(N_CHILDREN)
+            ],
+            "connections": [
+                "in_0 -> child_0.thru_0",
+                f"child_{N_CHILDREN-1}.thru_0 -> out_0",
+                *[f"child_{i}.thru_0 -> child_{i+1}.thru_0" for i in range(N_CHILDREN - 1)],
+            ],
+        },
+    }
+
+    assert verify_topology(qref_obj)
