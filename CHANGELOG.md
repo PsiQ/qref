@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/PsiQ/qref/compare/v0.10.0...v0.11.0) (2025-04-07)
+
+
+### Features
+
+* Improve performance of topology verification ([#133](https://github.com/PsiQ/qref/issues/133)) ([ae371dc](https://github.com/PsiQ/qref/commit/ae371dcb051367e459a512c63d335e71f46c49ec))
+
 ## [0.10.0](https://github.com/PsiQ/qref/compare/v0.9.0...v0.10.0) (2025-02-17)
 
 
