@@ -36,6 +36,22 @@ pip install -e .
     Without Poetry, you will need to edit dependencies manually,
     which is very error-prone.
 
+### Development Standards
+We use `pre-commit` hooks to ensure consistent development standards are maintained, and encourage any contributors to ensure `pre-commit` is installed prior to committing any changes to your branch. You can read the `pre-commit` docs [here](https://pre-commit.com).
+
+`pre-commit` is installed as a dev dependency in QREF, but prior to committing any changes you must run:
+```bash
+poetry run pre-commit install
+```
+To run all `pre-commit` hooks locally:
+```bash
+poetry run pre-commit run --all
+```
+This command will print a summary of the current code quality in your branch.
+
+!!!warning
+    If using Visual Studio Code, the `git` integration in Source Control does not detect `pre-commit` hooks. To use these, `git` commands must be run through the terminal in the installed `qref` virtual environment.
+
 ## Setting up docs locally
 
 In order to set up docs locally you need to have the appropriate dependencies – they get installed when running `poetry install` automatically. When done, please run:
