@@ -68,8 +68,8 @@ def test_topology_verification_of_a_large_routine_completes_in_acceptable_time()
             ],
             "connections": [
                 "in_0 -> child_0.thru_0",
-                f"child_{N_CHILDREN-1}.thru_0 -> out_0",
-                *[f"child_{i}.thru_0 -> child_{i+1}.thru_0" for i in range(N_CHILDREN - 1)],
+                f"child_{N_CHILDREN - 1}.thru_0 -> out_0",
+                *[f"child_{i}.thru_0 -> child_{i + 1}.thru_0" for i in range(N_CHILDREN - 1)],
             ],
         },
     }
