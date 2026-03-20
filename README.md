@@ -25,6 +25,14 @@ cd qref
 pip install .
 ```
 
+### Graphviz
+For visualization we use `graphviz`, which requires the [Graphviz](https://graphviz.org/) system package to be installed on your machine — the Python `graphviz` library alone is not sufficient.
+
+> - **macOS:** `brew install graphviz`
+> - **Linux (Debian/Ubuntu):** `sudo apt-get install graphviz`
+> - **Windows:** Download the installer from [graphviz.org/download](https://graphviz.org/download/) and add it to your `PATH`.
+ 
+
 ## QREF format
 
 QREF format represents quantum programs as a hierarchical directed acyclic graphs (DAGs).
