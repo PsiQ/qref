@@ -26,12 +26,7 @@ pip install .
 ```
 
 ### Graphviz
-For visualization we use `graphviz` Python package, which requires the [Graphviz](https://graphviz.org/) executable to be available in your PATH — the Python package is not sufficient.
-
-> - **macOS:** `brew install graphviz`
-> - **Linux (Debian/Ubuntu):** `sudo apt install graphviz`
-> - **Linux (Fedora):** `sudo dnf install graphviz`
-> - **Windows:** Download the installer from [graphviz.org/download](https://graphviz.org/download/) and add it to your `PATH`.
+For visualization we use `graphviz` Python package, which requires the [Graphviz](https://graphviz.org/) executable to be available in your PATH — the Python package is not sufficient. Please [follow the instructions here](https://graphviz.org/download/) based on the operating system you're using.
  
 
 ## QREF format
