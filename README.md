@@ -26,7 +26,7 @@ pip install .
 ```
 
 ### Graphviz
-For visualization we use `graphviz`, which requires the [Graphviz](https://graphviz.org/) system package to be installed on your machine — the Python `graphviz` library alone is not sufficient.
+For visualization we use `graphviz` Python package, which requires the [Graphviz](https://graphviz.org/) executable to be available in your PATH — the Python package is not sufficient.
 
 > - **macOS:** `brew install graphviz`
 > - **Linux (Debian/Ubuntu):** `sudo apt-get install graphviz`
