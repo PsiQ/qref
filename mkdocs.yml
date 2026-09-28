@@ -5,10 +5,10 @@ site_author: PsiQuantum Corp.
 copyright: Copyright © 2023-2024 PsiQuantum Corp.
 repo_url: https://github.com/psiq/qref
 nav:
-  - index.md
+  - What is QREF?: index.md
   - format.md
   - Python Library:
-      - library/userguide.md
+      - User Guide: library/userguide.md
       - API Reference:
           - qref: library/reference/qref.md
           - qref.schema_v1: library/reference/qref.schema_v1.md
