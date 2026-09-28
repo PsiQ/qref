@@ -101,9 +101,9 @@ qref-render my_program.yaml my_program_graph.svg
 The `qref-render` tool supports `yaml` and `json` input formats, and all
 output formats supported by [graphviz](https://graphviz.org/).
 
-If you prefer to use QREF's rendering capabilities from a Python script instead of the CLI, you can use the [`qref.experimental.rendering`](qref.experimental.rendering) module,  which performs the same task as `qref-render`. 
+If you prefer to use QREF's rendering capabilities from a Python script instead of the CLI, you can use the [`qref.experimental.rendering`][qref.experimental.rendering] module,  which performs the same task as `qref-render`. 
 
-Below we demonstate how the rendering module visualizes the quantum circuit for arbitrary state preparation in the alias sampling algorithm. This algorithm is explored in detailed in the tutorials for [Bartiq](https://psiq.github.io/bartiq/latest/tutorials/02_alias_sampling_basic/) – our library for symbolic resource estimation.
+Below we demonstate how the rendering module visualizes the quantum circuit for arbitrary state preparation in the alias sampling algorithm. This algorithm is explored in detailed in the tutorials for [Bartiq](https://docs.construct.psiquantum.com/bartiq/tutorials/02_alias_sampling_basic.html) – our library for symbolic resource estimation.
 
 We will use the `yaml` file `alias_sampling.yaml` as input to generate a graph representing this algorithm:
 
