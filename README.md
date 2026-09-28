@@ -110,7 +110,7 @@ program:
 ```
 
 
-For full description of QREF format, check our [docs](https://psiq.github.io/qref/latest/).
+For full description of QREF format, check our [docs](https://docs.construct.psiquantum.com/qref/).
 
 ## Using QREF package
 
