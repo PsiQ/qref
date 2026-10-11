@@ -128,7 +128,7 @@ data = load_some_program()
 schema = generate_program_schema()
 
 # This will raise if there are some validation errors.
-validate(schema, data)
+validate(data, schema)
 ```
 
 ### Validation using Pydantic models
@@ -155,4 +155,4 @@ In order to install development environment or build documentation locally, plea
 
 Documentation for `qref` can be found [here](https://psiq.github.io/qref/latest/).
 
-To run docs locally install it with `docs` option: `pip install ".[docs]"` (or `poetry install --with docs`) and then run `mkdocs serve`. 
+To run docs locally, install the documentation dependencies with `poetry install --with docs` and then run `poetry run mkdocs serve`.
