@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import json
-from subprocess import Popen
+from subprocess import Popen, run
 
 from qref.experimental.rendering import to_graphviz
 
@@ -33,3 +33,37 @@ def test_example_valid_programs_can_be_rendered_from_cli(valid_program, tmp_path
     process.wait()
 
     assert process.returncode == 0
+
+
+def test_rendered_connections_use_declared_leaf_ports():
+    routine = {
+        "name": "root",
+        "ports": [
+            {"name": "in_0", "direction": "input", "size": 1},
+            {"name": "in_1", "direction": "input", "size": 1},
+            {"name": "out_0", "direction": "output", "size": 1},
+            {"name": "out_1", "direction": "output", "size": 1},
+        ],
+        "children": [
+            {
+                "name": "operation",
+                "ports": [
+                    {"name": "in_0", "direction": "input", "size": 1},
+                    {"name": "in_1", "direction": "input", "size": 1},
+                    {"name": "out_0", "direction": "output", "size": 1},
+                    {"name": "out_1", "direction": "output", "size": 1},
+                ],
+            }
+        ],
+        "connections": [
+            "in_0 -> operation.in_0",
+            "in_1 -> operation.in_1",
+            "operation.out_0 -> out_0",
+            "operation.out_1 -> out_1",
+        ],
+    }
+    dag = to_graphviz(routine)
+
+    process = run(["dot", "-Tsvg"], input=dag.source, text=True, capture_output=True, check=True)
+
+    assert "unrecognized" not in process.stderr
