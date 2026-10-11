@@ -20,7 +20,7 @@ program:
         - { direction: input, name: in_1, size: 2 }
         - { direction: output, name: out, size: 3 }
   connections:
-    - "in_0 -> subtourine_1.in"
+    - "in_0 -> subroutine_1.in"
     - "in_1 -> subroutine_2.in"
     - "subroutine_1.out -> merge.in_1"
     - "subroutine_2.out -> merge.in_0"

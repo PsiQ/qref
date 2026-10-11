@@ -32,7 +32,7 @@ data = load_some_program()
 schema = generate_program_schema()
 
 # This will raise an exception if there are some validation errors.
-validate(schema, data)
+validate(data, schema)
 ```
 
 ### Validation using Pydantic models
