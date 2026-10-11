@@ -97,7 +97,7 @@ def _format_node_name(node_name, parent, full_path):
     if child.children:  # Case 2: port of non-leaf child (=> port is a graphviz node)
         return f'"{full_path}.{node_name}"'
     else:  # Case 3: port of leaf child (=> port is an actual port of Mrecord, use ":")
-        return f'"{full_path}.{child_name}": {port_name}'
+        return f'"{full_path}.{child_name}"' + ":" + port_name
 
 
 def _add_nonleaf_ports(ports, parent_cluster, parent_path: str, group_name):
