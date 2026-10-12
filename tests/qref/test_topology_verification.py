@@ -75,3 +75,30 @@ def test_topology_verification_of_a_large_routine_completes_in_acceptable_time()
     }
 
     assert verify_topology(qref_obj)
+
+
+def test_parent_port_and_child_with_the_same_name_do_not_form_a_cycle():
+    qref_obj = {
+        "version": "v1",
+        "program": {
+            "name": "root",
+            "ports": [
+                {"name": "a", "direction": "input", "size": 1},
+                {"name": "out_0", "direction": "output", "size": 1},
+            ],
+            "children": [
+                {
+                    "name": "a",
+                    "ports": [
+                        {"name": "in_0", "direction": "input", "size": 1},
+                        {"name": "out_0", "direction": "output", "size": 1},
+                    ],
+                }
+            ],
+            "connections": ["a -> a.in_0", "a.out_0 -> out_0"],
+        },
+    }
+
+    verification_output = verify_topology(qref_obj)
+
+    assert verification_output.problems == []
