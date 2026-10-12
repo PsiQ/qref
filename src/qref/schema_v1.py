@@ -36,7 +36,7 @@ NAME_PATTERN = "[A-Za-z_][A-Za-z0-9_]*"
 OPTIONALLY_NAMESPACED_NAME_PATTERN = rf"({NAME_PATTERN}\.)?{NAME_PATTERN}"
 MULTINAMESPACED_NAME_PATTERN = rf"({NAME_PATTERN}\.)+{NAME_PATTERN}"
 OPTIONALLY_MULTINAMESPACED_NAME_PATTERN = rf"({NAME_PATTERN}\.)*{NAME_PATTERN}"
-CONNECTION_PATTERN = rf"{OPTIONALLY_MULTINAMESPACED_NAME_PATTERN} -> {OPTIONALLY_MULTINAMESPACED_NAME_PATTERN}"
+CONNECTION_PATTERN = rf"\s*{OPTIONALLY_NAMESPACED_NAME_PATTERN}\s*->\s*{OPTIONALLY_NAMESPACED_NAME_PATTERN}\s*"
 
 _Name = Annotated[str, StringConstraints(pattern=rf"^{NAME_PATTERN}$")]
 _OptionallyNamespacedName = Annotated[str, StringConstraints(pattern=rf"^{OPTIONALLY_NAMESPACED_NAME_PATTERN}$")]
@@ -106,8 +106,8 @@ _source_sorter = AfterValidator(_sorter(lambda c: c.source))
 
 def _parse_connection(connection):
     if isinstance(connection, str):
-        source, target = connection.replace(" ", "").split("->")
-        return {"source": source, "target": target}
+        source, target = connection.split("->")
+        return {"source": source.strip(), "target": target.strip()}
     return connection
 
 

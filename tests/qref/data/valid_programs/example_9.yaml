@@ -1,0 +1,24 @@
+description: Program with concise connections using varying whitespace
+input:
+  program:
+    children:
+    - name: child_1
+      ports:
+      - direction: input
+        name: in_0
+        size: 1
+      - direction: output
+        name: out_0
+        size: 1
+    connections:
+    - "in_0->child_1.in_0"
+    - "child_1.out_0  ->  out_0"
+    name: root
+    ports:
+    - direction: input
+      name: in_0
+      size: 1
+    - direction: output
+      name: out_0
+      size: 1
+  version: v1
