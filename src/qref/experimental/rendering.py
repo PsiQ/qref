@@ -210,4 +210,4 @@ def render_entry_point():
         routine = SchemaV1.model_validate(yaml.safe_load(f))
 
     dag = to_graphviz(routine)
-    dag.render(args.output.with_suffix(""), format=args.output.suffix.strip("."))
+    args.output.write_bytes(dag.pipe(format=args.output.suffix.strip(".")))

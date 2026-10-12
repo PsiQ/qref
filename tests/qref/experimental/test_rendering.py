@@ -33,3 +33,20 @@ def test_example_valid_programs_can_be_rendered_from_cli(valid_program, tmp_path
     process.wait()
 
     assert process.returncode == 0
+
+
+def test_rendering_from_cli_writes_only_the_output_file(valid_program, tmp_path):
+    # Output path is chosen so that stripping its extension gives the input path.
+    input_path = tmp_path / "input.json"
+    output_path = tmp_path / "input.json.svg"
+
+    with open(input_path, "wt") as f:
+        json.dump(valid_program, f)
+
+    process = Popen(["qref-render", input_path, output_path])
+    process.wait()
+
+    assert process.returncode == 0
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["input.json", "input.json.svg"]
+    with open(input_path) as f:
+        assert json.load(f) == valid_program
