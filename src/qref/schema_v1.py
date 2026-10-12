@@ -17,6 +17,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterator, MutableMapping
+from copy import deepcopy
 from typing import Annotated, Any, Literal, TypeVar, get_args
 
 from pydantic import (
@@ -288,7 +289,7 @@ class _GenerateV1JsonSchema(GenerateJsonSchema):
         json_schema = super().generate(schema, mode=mode)
         json_schema["title"] = "FTQC-ready quantum program"
         json_schema["$schema"] = self.schema_dialect
-        json_schema["$defs"]["Routine"]["properties"]["connections"] = CONNECTION_SCHEMA
+        json_schema["$defs"]["Routine"]["properties"]["connections"] = deepcopy(CONNECTION_SCHEMA)
         return json_schema
 
     def normalize_name(self, name):

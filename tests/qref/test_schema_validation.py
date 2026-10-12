@@ -72,3 +72,10 @@ def test_chronology_of_children_is_preserved_when_constructing_model_instances()
     qref_obj = SchemaV1.model_validate(input)
 
     assert [child.name for child in qref_obj.program.children] == ["c", "b", "d"]
+
+
+def test_modifying_generated_schema_does_not_affect_subsequently_generated_schemas():
+    schema = generate_program_schema()
+    schema["$defs"]["Routine"]["properties"]["connections"]["items"]["anyOf"].clear()
+
+    assert generate_program_schema()["$defs"]["Routine"]["properties"]["connections"]["items"]["anyOf"]
