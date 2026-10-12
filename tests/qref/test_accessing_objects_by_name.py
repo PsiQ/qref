@@ -100,7 +100,7 @@ class TestAccessingPortsByName:
     def test_nonexistent_port_cannot_be_set(self, example_routine):
         with pytest.raises(KeyError) as exc_info:
             new_port = PortV1(name="in_10", size=42, direction="input")
-            example_routine.children.by_name["in_10"] = new_port
+            example_routine.ports.by_name["in_10"] = new_port
 
         assert exc_info.value.args == ("in_10",)
 
