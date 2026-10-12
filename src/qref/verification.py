@@ -20,7 +20,9 @@ from typing import Callable
 from .functools import accepts_all_qref_types
 from .schema_v1 import RoutineV1
 
-Graph = dict[str, list[str]]
+# Nodes for children are wrapped in a tuple, so that they can't clash with ports of the same name
+Node = str | tuple[str]
+Graph = dict[Node, list[Node]]
 
 
 @dataclass
@@ -76,7 +78,7 @@ def _graph_from_routine(routine: RoutineV1, path: tuple[str, ...]) -> Graph:
     Additionaly, we add node for each children and edges coming from all the input ports
     into the children, and from the children into all the output ports.
     """
-    graph = defaultdict[str, list[str]](list)
+    graph = defaultdict[Node, list[Node]](list)
     _prefix = _make_prefixer(path + (routine.name,))
 
     # First, we go through all the connections and add them as adges to the graph
@@ -91,6 +93,7 @@ def _graph_from_routine(routine: RoutineV1, path: tuple[str, ...]) -> Graph:
         output_ports: list[str] = []
 
         child_path = _prefix(child.name)
+        child_node = (child_path,)
         for port in child.ports:
             if port.direction == "input":
                 input_ports.append(".".join([child_path, port.name]))
@@ -98,10 +101,10 @@ def _graph_from_routine(routine: RoutineV1, path: tuple[str, ...]) -> Graph:
                 output_ports.append(".".join([child_path, port.name]))
 
         for input_port in input_ports:
-            graph[child_path].append(input_port)
+            graph[child_node].append(input_port)
 
         for output_port in output_ports:
-            graph[output_port].append(child_path)
+            graph[output_port].append(child_node)
 
     return graph
 
@@ -111,7 +114,8 @@ def _find_cycles(routine: RoutineV1, ancestor_path: tuple[str, ...]) -> list[str
     try:
         _ = tuple(sorter.static_order())  # static_order is a generator, tuple() triggers actual iteration
     except CycleError as e:
-        return [f"Cycle detected: {e.args[1]}"]
+        cycle = [node if isinstance(node, str) else node[0] for node in e.args[1]]
+        return [f"Cycle detected: {cycle}"]
 
     return []
 
