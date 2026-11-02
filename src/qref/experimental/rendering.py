@@ -130,9 +130,10 @@ def _add_nonleaf(routine, dag: graphviz.Digraph, parent_path: str) -> None:
         _add_nonleaf_ports(through_ports, cluster, full_path, "through")
 
         # We're adding ghost nodes and edges to position the through ports in the middle
+        # "$" cannot occur in QREF names, keeping helpers separate from real ports.
         for port in through_ports:
-            dummy_out = f'"{full_path}.{port.name}_out"'
-            dummy_in = f'"{full_path}.{port.name}_in"'
+            dummy_out = f'"{full_path}.{port.name}$through_out"'
+            dummy_in = f'"{full_path}.{port.name}$through_in"'
             pname = f'"{full_path}.{port.name}"'
             cluster.node(dummy_in, label="", style="invis")
             cluster.node(dummy_out, label="", style="invis")
