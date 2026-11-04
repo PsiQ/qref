@@ -15,7 +15,7 @@
 default_language_version:
   python: python3
 
-default_stages: [commit, push]
+default_stages: [pre-commit, pre-push]
 
 repos:
   - repo: https://github.com/PyCQA/isort
@@ -31,7 +31,7 @@ repos:
         args: ["--check"]
 
   - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
+    rev: 7.5.0
     hooks:
       - id: flake8
 
