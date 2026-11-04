@@ -15,7 +15,7 @@ jobs:
       - name: Increment version and create PR
         uses: googleapis/release-please-action@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.RELEASE_PLEASE_GITHUB_TOKEN }}
           release-type: python
           skip-github-release: false
           skip-github-pull-request: true
