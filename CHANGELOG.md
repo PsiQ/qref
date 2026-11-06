@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.2](https://github.com/PsiQ/qref/compare/v0.11.1...v0.11.2) (2026-11-06)
+
+
+### Bug Fixes
+
+* Fix release workflow ([82d7004](https://github.com/PsiQ/qref/commit/82d70046cce5ad0a9b7250e69944a02692b39013))
+
 ## [0.11.1](https://github.com/PsiQ/qref/compare/v0.11.0...v0.11.1) (2026-11-05)
 
 
