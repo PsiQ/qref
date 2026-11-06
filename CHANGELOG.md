@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.11.1](https://github.com/PsiQ/qref/compare/v0.11.0...v0.11.1) (2026-11-05)
+
+
+### Bug Fixes
+
+* doc headings ([#141](https://github.com/PsiQ/qref/issues/141)) ([8f719bb](https://github.com/PsiQ/qref/commit/8f719bbe18feb9aa4d23d947ad86d37f3be13d54))
+* Restore correct formatting of ports ([#157](https://github.com/PsiQ/qref/issues/157)) ([2061f45](https://github.com/PsiQ/qref/commit/2061f45c68b2a02ea283657b4179f11fcd91917c))
+
+
+### Documentation
+
+* add agent guidance ([#139](https://github.com/PsiQ/qref/issues/139)) ([5ad2d05](https://github.com/PsiQ/qref/commit/5ad2d05912eb6b7385d0691d1dbeded8288a34d2))
+
 ## [0.11.0](https://github.com/PsiQ/qref/compare/v0.10.0...v0.11.0) (2025-04-07)
 
 
